@@ -2,7 +2,7 @@ import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output
 import pandas as pd
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from dotenv import load_dotenv
 import os
 import plotly.express as px
@@ -21,11 +21,11 @@ DB_PASSWORD = os.getenv('DB_PASSWORD')
 engine = create_engine(f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}')
 
 # Main query to retrieve only necessary data from fact_entry and dim_calendar tables
-query = """
+query = text("""
 SELECT fe.entry_date, dc.year_number, dc.season
 FROM fact_entry fe
 JOIN dim_calendar dc ON fe.entry_date = dc.date_cal;
-"""
+""")
 
 # Read the data into a pandas DataFrame
 df = pd.read_sql(query, engine)
