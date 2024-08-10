@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
-from .models import DimCalendar
+from . import models
 
-def get_calendar(db: Session, season: str = None, year_number: int = None):
-    query = db.query(DimCalendar)
-    if season:
-        query = query.filter(DimCalendar.season == season)
-    if year_number:
-        query = query.filter(DimCalendar.year_number == year_number)
+def get_calendar(db: Session, season_name: str = None, period_default: int = None):
+    query = db.query(models.DimCalendar)
+    if season_name:
+        query = query.filter(models.DimCalendar.season_name == season_name)
+    if period_default:
+        query = query.filter(models.DimCalendar.period_default == period_default)
     return query.all()
