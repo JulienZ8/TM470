@@ -8,3 +8,6 @@ def get_calendar(db: Session, season_name: str = None, period_default: int = Non
     if period_default:
         query = query.filter(models.DimCalendar.period_default == period_default)
     return query.all()
+
+def get_factentry_by_id(db: Session, factentry_id: int):
+    return db.query(models.FactEntry).filter(models.FactEntry.id == factentry_id).first()
