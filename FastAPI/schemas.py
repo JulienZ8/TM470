@@ -16,3 +16,10 @@ class FactEntry(BaseModel):
 
     class Config:
         from_attributes = True
+
+class SeasonEntry(BaseModel):
+    season_name: str
+    total_entries: int
+
+    class Config:
+        orm_mode = True

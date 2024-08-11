@@ -37,3 +37,7 @@ def read_factentry(id: int, db: Session = Depends(get_db)):
     if fact_entry is None:
         raise HTTPException(status_code=404, detail="Fact entry not found")
     return fact_entry
+
+@app.get("/season-entries/", response_model=List[schemas.SeasonEntry])
+def read_season_entries(db: Session = Depends(get_db)):
+    return crud.get_season_entries(db)

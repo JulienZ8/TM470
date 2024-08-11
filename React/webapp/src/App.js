@@ -1,6 +1,7 @@
 import React from 'react';
 import CalendarData from './components/CalendarData';
-import ChartTest from './components/chart_test'
+import SeasonEntriesChart from './components/SeasonEntriesChart';
+
 
 function App() {
   return (
@@ -11,7 +12,7 @@ function App() {
           Calendar Data from FastAPI:
         </p>
       </header>
-      <ChartTest />
+      <SeasonEntriesChart />
       <CalendarData />
     </div>
   );
