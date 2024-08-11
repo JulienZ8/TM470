@@ -22,4 +22,13 @@ class SeasonEntry(BaseModel):
     total_entries: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+class SeasonEntryGrouped(BaseModel):
+    season_name: str
+    period_default: str
+    entry_count : int
+    total_entries: int
+
+    class Config:
+        from_attributes = True

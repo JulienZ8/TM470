@@ -1,6 +1,6 @@
 import React from 'react';
 import CalendarData from './components/CalendarData';
-import SeasonEntriesChart from './components/SeasonEntriesChart';
+import SeasonEntriesChartGrouped from './components/SeasonEntriesChartGrouped';
 
 
 function App() {
@@ -8,12 +8,8 @@ function App() {
 
     <div className="App">
       <header className="App-header">
-        <p>
-          Calendar Data from FastAPI:
-        </p>
       </header>
-      <SeasonEntriesChart />
-      <CalendarData />
+      <SeasonEntriesChartGrouped />
     </div>
   );
 }

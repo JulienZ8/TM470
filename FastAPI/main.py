@@ -41,3 +41,7 @@ def read_factentry(id: int, db: Session = Depends(get_db)):
 @app.get("/season-entries/", response_model=List[schemas.SeasonEntry])
 def read_season_entries(db: Session = Depends(get_db)):
     return crud.get_season_entries(db)
+
+@app.get("/season-entries-grouped/", response_model=List[schemas.SeasonEntryGrouped])
+def read_season_entries_grouped(db: Session = Depends(get_db)):
+    return crud.get_season_entries_grouped(db)

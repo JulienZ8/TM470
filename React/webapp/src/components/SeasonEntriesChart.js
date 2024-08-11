@@ -1,42 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import axios from 'axios';
+import api from '../api';  // Adjust the import path if necessary
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 function SeasonEntriesChart() {
-    const [chartData, setChartData] = useState({
-        labels: [],
+    const [seasonEntries, setSeasonEntries] = useState([]);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        api.get('/season-entries/')
+            .then(response => {
+                setSeasonEntries(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching season entries', error);
+                setError('Failed to load data');
+            });
+    }, []);
+
+    const chartData = useMemo(() => ({
+        labels: seasonEntries.map(item => item.season_name),
         datasets: [{
             label: 'Total Entries by Season',
-            data: [],
+            data: seasonEntries.map(item => item.total_entries),
             backgroundColor: 'rgba(54, 162, 235, 0.2)',
             borderColor: 'rgba(54, 162, 235, 1)',
             borderWidth: 1,
         }]
-    });
-
-    useEffect(() => {
-        axios.get('http://127.0.0.1:8000/season-entries/')
-            .then(response => {
-                const labels = response.data.map(item => item.season_name);
-                const data = response.data.map(item => item.total_entries);
-                setChartData({
-                    labels: labels,
-                    datasets: [{
-                        ...chartData.datasets[0],
-                        data: data
-                    }]
-                });
-            })
-            .catch(error => console.error('Error fetching season entries', error));
-    }, []);
+    }), [seasonEntries]);
 
     return (
         <div>
             <h2>Season Entries Chart</h2>
-            <Bar data={chartData} options={{ scales: { y: { beginAtZero: true } } }} />
+            {error ? <p>{error}</p> : <Bar data={chartData} options={{ scales: { y: { beginAtZero: true } } }} />}
         </div>
     );
 }
