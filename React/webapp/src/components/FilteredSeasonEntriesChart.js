@@ -1,39 +1,36 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import api from '../api';
+import api from '../api'; // Import your Axios instance
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasons = [] }) {
+function AggregatedSeasonEntriesChart() {
     const [seasonEntries, setSeasonEntries] = useState([]);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        api.get('/season-entries-grouped/')
+        fetchData();
+    }, []);
+
+    const fetchData = () => {
+        api.get('/factentry-aggregated/')
             .then(response => {
                 setSeasonEntries(response.data);
             })
             .catch(error => {
-                console.error('Error fetching season entries', error);
+                console.error('Error fetching aggregated season entries', error);
                 setError('Failed to load data');
             });
-    }, []);
-
-    const filteredSeasonEntries = useMemo(() => {
-        return seasonEntries.filter(entry => 
-            (selectedPeriods.length === 0 || selectedPeriods.includes(entry.period_default)) &&
-            (selectedSeasons.length === 0 || selectedSeasons.includes(entry.season_name))
-        );
-    }, [seasonEntries, selectedPeriods, selectedSeasons]);
+    };
 
     const chartData = useMemo(() => {
         const groupedData = {};
 
-        filteredSeasonEntries.forEach(entry => {
+        seasonEntries.forEach(entry => {
             const season = entry.season_name;
             const period = entry.period_default;
-            const entryCount = entry.entry_count;
+            const entryCount = entry.total_entries;
 
             if (!groupedData[season]) {
                 groupedData[season] = {};
@@ -43,19 +40,21 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasons = [] 
         });
 
         const seasons = Object.keys(groupedData);
-        const datasets = selectedPeriods.map(period => ({
+        const periods = [...new Set(seasonEntries.map(item => item.period_default))];
+
+        const datasets = periods.map(period => ({
             label: period,
             data: seasons.map(season => groupedData[season][period] || 0),
             backgroundColor: getRandomColor(),
             borderColor: getRandomColor(),
-            borderWidth: 0,
+            borderWidth: 1,
         }));
 
         return {
             labels: seasons,
             datasets: datasets,
         };
-    }, [filteredSeasonEntries, selectedPeriods]);
+    }, [seasonEntries]);
 
     const options = {
         scales: {
@@ -69,14 +68,9 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasons = [] 
                     label: (context) => {
                         const period = context.dataset.label;
                         const entryCount = context.raw;
-                        const seasonEntry = filteredSeasonEntries.find(
-                            entry => entry.season_name === context.label && entry.period_default === period
-                        );
-                        const totalEntries = seasonEntry.total_entries;
                         return [
                             `Period: ${period}`,
-                            `Entries: ${entryCount}`,
-                            `Total: ${totalEntries}`,
+                            `Total Entries: ${entryCount}`,
                         ];
                     },
                 },
@@ -86,7 +80,7 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasons = [] 
 
     return (
         <div>
-            <h2>Season Entries Chart Grouped</h2>
+            <h2>Aggregated Season Entries Chart</h2>
             {error ? <p>{error}</p> : <Bar data={chartData} options={options} />}
         </div>
     );
@@ -101,5 +95,4 @@ function getRandomColor() {
     return color;
 }
 
-export default SeasonEntriesChartGrouped;
-
+export default AggregatedSeasonEntriesChart;

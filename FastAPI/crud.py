@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
+from typing import Optional
 from . import models
 
 #test function
@@ -49,3 +50,17 @@ def get_season_entries_grouped(db: Session):
     )
 
     return result if result else []
+
+
+def get_factentry_calendar(db: Session):
+    # Perform a join between FactEntry and DimCalendar
+    results = db.query(
+        models.FactEntry.id, 
+        models.FactEntry.entry_date, 
+        models.DimCalendar.date_cal,
+        models.DimCalendar.period_default,
+        models.DimCalendar.season_name,
+        models.DimCalendar.season
+    ).join(models.DimCalendar, models.FactEntry.entry_date == models.DimCalendar.date_cal).all()
+
+    return results

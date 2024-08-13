@@ -1,10 +1,11 @@
 from fastapi import FastAPI, Depends, Query, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import func
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine
-from typing import List
+from typing import List, Optional
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -45,3 +46,29 @@ def read_season_entries(db: Session = Depends(get_db)):
 @app.get("/season-entries-grouped/", response_model=List[schemas.SeasonEntryGrouped])
 def read_season_entries_grouped(db: Session = Depends(get_db)):
     return crud.get_season_entries_grouped(db)
+
+
+@app.get("/factentry-aggregated/", response_model=List[schemas.FactEntryAggregated])
+def get_fact_entry_aggregated(
+    season_name: Optional[str] = Query(None),
+    db: Session = Depends(get_db)
+):
+    # Correct aggregation: counting the number of records
+    query = db.query(
+        models.DimCalendar.season_name,
+        models.DimCalendar.period_default,
+        func.count(models.FactEntry.id).label('total_entries')  # Count the number of FactEntry records
+    ).join(models.FactEntry).group_by(
+        models.DimCalendar.season_name,
+        models.DimCalendar.period_default
+    )
+
+    if season_name:
+        query = query.filter(models.DimCalendar.season_name == season_name)
+
+    results = query.all()
+
+    if not results:
+        raise HTTPException(status_code=404, detail="No data found")
+
+    return [{"season_name": row[0], "period_default": row[1], "total_entries": row[2]} for row in results]
