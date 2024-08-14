@@ -75,17 +75,20 @@ def get_fact_entry_aggregated(
 
 
 @app.get("/entries/", response_model=List[schemas.FactEntry])
-async def read_entries(season_name: str = None, period_default: str = None, db: Session = Depends(get_db)):
+def read_entries(season_name: str = None, period_default: str = None, db: Session = Depends(get_db)):
     return crud.get_entries(db, season_name=season_name, period_default=period_default)
 
-@app.get("/entries/periods", response_model=List[str])
+@app.get("/periodlist/", response_model=List[str])
 def get_periods(db: Session = Depends(get_db)):
     periods = db.query(models.DimCalendar.period_default).distinct().all()
     return [period.period_default for period in periods]
-#Fetches all unique period_default values from DimCalendar
 
-@app.get("/entries/seasons", response_model=List[str])
-def get_seasons(db: Session = Depends(get_db)):
-    seasons = db.query(models.DimCalendar.season_name).distinct().all()
-    return [season.season_name for season in seasons]
-#Fetches all unique season_name values from DimCalendar
+@app.get("/seasonnamelist/", response_model=List[str])
+def get_season_names(db: Session = Depends(get_db)):
+    season_names = db.query(models.DimCalendar.season_name).distinct().all()
+    return [season_name.season_name for season_name in season_names]
+
+@app.get("/seasonlist/", response_model=List[str])
+def get_season_names(db: Session = Depends(get_db)):
+    seasons = db.query(models.DimCalendar.season).distinct().all()
+    return [season.season for season in seasons]

@@ -5,7 +5,7 @@ import api from '../api';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasons = [] }) {
+function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasons = [], selectedSeasonNames = [] }) {
     const [seasonEntries, setSeasonEntries] = useState([]);
     const [error, setError] = useState(null);
 
@@ -23,9 +23,10 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasons = [] 
     const filteredSeasonEntries = useMemo(() => {
         return seasonEntries.filter(entry => 
             (selectedPeriods.length === 0 || selectedPeriods.includes(entry.period_default)) &&
-            (selectedSeasons.length === 0 || selectedSeasons.includes(entry.season_name))
+            (selectedSeasons.length === 0 || selectedSeasons.includes(entry.season_name)) &&
+            (selectedSeasonNames.length === 0 || selectedSeasonNames.includes(entry.season))
         );
-    }, [seasonEntries, selectedPeriods, selectedSeasons]);
+    }, [seasonEntries, selectedPeriods, selectedSeasons, selectedSeasonNames]);
 
     const chartData = useMemo(() => {
         const groupedData = {};
@@ -102,4 +103,3 @@ function getRandomColor() {
 }
 
 export default SeasonEntriesChartGrouped;
-
