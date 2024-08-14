@@ -41,7 +41,7 @@ function PeriodSelector({ onPeriodChange }) {
     return (
         <div>
             <button onClick={() => setIsOpen(!isOpen)}>
-                Select Period
+                Période
             </button>
             {isOpen && (
                 <div className="dropdown">

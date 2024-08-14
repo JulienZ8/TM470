@@ -40,7 +40,7 @@ function EteHiverSelector({ selectedEteHiver, onSeasonChange }) {
     return (
         <div>
             <button onClick={() => setIsOpen(!isOpen)}>
-                Select Season
+                Été/hiver
             </button>
             {isOpen && (  // Only show the dropdown when isOpen is true
                 <div className="dropdown">

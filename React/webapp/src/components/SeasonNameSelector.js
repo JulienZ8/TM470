@@ -41,7 +41,7 @@ function SeasonNameSelector({ onSeasonChange }) {
     return (
         <div>
             <button onClick={() => setIsOpen(!isOpen)}>
-                Select Seasons
+                Saison
             </button>
             {isOpen && (
                 <div className="dropdown">

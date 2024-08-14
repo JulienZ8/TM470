@@ -1,5 +1,3 @@
-// SeasonEntriesChartGrouped.js
-
 import React, { useState, useEffect, useMemo } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
@@ -7,7 +5,7 @@ import api from '../api';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames = [], selectedEteHiver = [] }) {
+function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames = [], selectedEteHiver = [], selectedPass = 'All' }) {
     const [seasonEntries, setSeasonEntries] = useState([]);
     const [error, setError] = useState(null);
 
@@ -24,11 +22,12 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
 
     const filteredSeasonEntries = useMemo(() => {
         return seasonEntries.filter(entry => 
-            (selectedPeriods.includes(entry.period_default)) &&
-            (selectedSeasonNames.includes(entry.season_name)) &&
-            (selectedEteHiver.includes(entry.season))
+            selectedPeriods.includes(entry.period_default) &&
+            selectedSeasonNames.includes(entry.season_name) &&
+            selectedEteHiver.includes(entry.season) &&
+            (selectedPass === 'All' || entry.pass_category === selectedPass)
         );
-    }, [seasonEntries, selectedPeriods, selectedSeasonNames, selectedEteHiver]);
+    }, [seasonEntries, selectedPeriods, selectedSeasonNames, selectedEteHiver, selectedPass]);
 
     const chartData = useMemo(() => {
         const groupedData = {};
@@ -42,7 +41,7 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
                 groupedData[season] = {};
             }
 
-            groupedData[season][period] = entryCount;
+            groupedData[season][period] = (groupedData[season][period] || 0) + entryCount;
         });
 
         const seasons = Object.keys(groupedData);
@@ -89,7 +88,7 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
 
     return (
         <div>
-            <h2>Season Entries Chart Grouped</h2>
+            <h2>Premières entrées</h2>
             {error ? <p>{error}</p> : <Bar data={chartData} options={options} />}
         </div>
     );
@@ -105,3 +104,4 @@ function getRandomColor() {
 }
 
 export default SeasonEntriesChartGrouped;
+

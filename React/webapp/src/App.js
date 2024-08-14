@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import PeriodSelector from './components/PeriodSelector';
 import SeasonNameSelector from './components/SeasonNameSelector';
+import EteHiverSelector from './components/EteHiverSelector';
+import PassSelector from './components/PassSelector';  // New import
 import SeasonEntriesChartGrouped from './components/SeasonEntriesChartGrouped';
-import EteHiverSelector from './components/EteHiverSelector'; // Import the new selector
 
 function App() {
     const [selectedPeriods, setSelectedPeriods] = useState([]);
     const [selectedSeasonNames, setSelectedSeasonNames] = useState([]);
-    const [selectedEteHiver, setSelectedEteHiver] = useState([]);
-    
+    const [selectedSeasons, setSelectedSeasons] = useState([]);
+    const [selectedPass, setSelectedPass] = useState('All'); // New state
+
     const handlePeriodChange = (periods) => {
         setSelectedPeriods(periods);
     };
@@ -17,22 +19,28 @@ function App() {
         setSelectedSeasonNames(seasonNames);
     };
 
-    const handleEteHiverChange = (seasons) => {
-        setSelectedEteHiver(seasons);
+    const handleSeasonChange = (seasons) => {
+        setSelectedSeasons(seasons);
+    };
+
+    const handlePassChange = (pass) => {
+        setSelectedPass(pass);
     };
 
     return (
         <div style={{ display: 'flex', flexDirection: 'row', padding: '20px' }}>
             <div style={{ display: 'flex', flexDirection: 'column', marginRight: '20px' }}>
-                <PeriodSelector selectedPeriods={selectedPeriods} onPeriodChange={handlePeriodChange} />
-                <SeasonNameSelector selectedSeasonNames={selectedSeasonNames} onSeasonChange={handleSeasonNameChange} />
-                <EteHiverSelector selectedEteHiver={selectedEteHiver} onSeasonChange={handleEteHiverChange} />
+                <PeriodSelector onPeriodChange={handlePeriodChange} />
+                <SeasonNameSelector onSeasonChange={handleSeasonNameChange} />
+                <EteHiverSelector onSeasonChange={handleSeasonChange} />
+                <PassSelector onPassChange={handlePassChange} /> {/* Add the new selector */}
             </div>
             <div style={{ flex: 1 }}>
                 <SeasonEntriesChartGrouped
                     selectedPeriods={selectedPeriods}
                     selectedSeasonNames={selectedSeasonNames}
-                    selectedEteHiver={selectedEteHiver}
+                    selectedEteHiver={selectedSeasons}
+                    selectedPass={selectedPass} // Pass the selected pass to the chart
                 />
             </div>
         </div>
