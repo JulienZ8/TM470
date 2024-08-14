@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import PeriodSelector from './components/PeriodSelector';
 import SeasonNameSelector from './components/SeasonNameSelector';
 import SeasonEntriesChartGrouped from './components/SeasonEntriesChartGrouped';
@@ -13,6 +14,7 @@ function App() {
 
     const handleSeasonChange = (seasons) => {
         setSelectedSeasons(seasons);
+
     };
 
     return (
@@ -29,4 +31,3 @@ function App() {
 }
 
 export default App;
-

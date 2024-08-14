@@ -22,8 +22,8 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasons = [],
 
     const filteredSeasonEntries = useMemo(() => {
         return seasonEntries.filter(entry => 
-            (selectedPeriods.length === 0 || selectedPeriods.includes(entry.period_default)) &&
-            (selectedSeasons.length === 0 || selectedSeasons.includes(entry.season_name)) &&
+            (selectedPeriods.includes(entry.period_default)) &&
+            (selectedSeasons.includes(entry.season_name)) &&
             (selectedSeasonNames.length === 0 || selectedSeasonNames.includes(entry.season))
         );
     }, [seasonEntries, selectedPeriods, selectedSeasons, selectedSeasonNames]);
