@@ -8,6 +8,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames = [], selectedEteHiver = [], selectedPass = 'All' }) {
     const [seasonEntries, setSeasonEntries] = useState([]);
     const [error, setError] = useState(null);
+    const [colorMap, setColorMap] = useState({});  // Initialize color map state
 
     useEffect(() => {
         api.get('/season-entries-grouped/')
@@ -31,6 +32,7 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
 
     const chartData = useMemo(() => {
         const groupedData = {};
+        const newColorMap = { ...colorMap };  // Create a copy of the current color map
 
         filteredSeasonEntries.forEach(entry => {
             const season = entry.season_name;
@@ -42,14 +44,20 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
             }
 
             groupedData[season][period] = (groupedData[season][period] || 0) + entryCount;
+
+            if (!newColorMap[period]) {
+                newColorMap[period] = getRandomColor();
+            }
         });
+
+        setColorMap(newColorMap);
 
         const seasons = Object.keys(groupedData);
         const datasets = selectedPeriods.map(period => ({
             label: period,
             data: seasons.map(season => groupedData[season][period] || 0),
-            backgroundColor: getRandomColor(),
-            borderColor: getRandomColor(),
+            backgroundColor: newColorMap[period],  
+            borderColor: newColorMap[period],  
             borderWidth: 0,
         }));
 
