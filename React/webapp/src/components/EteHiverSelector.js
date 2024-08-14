@@ -3,13 +3,14 @@ import api from '../api';
 
 function EteHiverSelector({ selectedEteHiver, onSeasonChange }) {
     const [seasons, setSeasons] = useState([]);
-    const [localSelectedSeason, setLocalSelectedSeason] = useState(selectedEteHiver || []);
+    const [localSelectedSeasons, setLocalSelectedSeasons] = useState(selectedEteHiver || []);
+    const [isOpen, setIsOpen] = useState(false);  // State to track if dropdown is open
 
     useEffect(() => {
         api.get('/seasonlist/')
             .then(response => {
                 setSeasons(response.data);
-                setLocalSelectedSeason(response.data); // Select all by default
+                setLocalSelectedSeasons(response.data); // Select all by default
             })
             .catch(error => {
                 console.error('Error fetching seasons', error);
@@ -17,54 +18,57 @@ function EteHiverSelector({ selectedEteHiver, onSeasonChange }) {
     }, []);
 
     useEffect(() => {
-        onSeasonChange(localSelectedSeason);
-    }, [localSelectedSeason, onSeasonChange]);
+        onSeasonChange(localSelectedSeasons);
+    }, [localSelectedSeasons, onSeasonChange]);
 
     const handleSeasonChange = (season) => {
-        if (localSelectedSeason.includes(season)) {
-            setLocalSelectedSeason(localSelectedSeason.filter(s => s !== season));
+        if (localSelectedSeasons.includes(season)) {
+            setLocalSelectedSeasons(localSelectedSeasons.filter(s => s !== season));
         } else {
-            setLocalSelectedSeason([...localSelectedSeason, season]);
+            setLocalSelectedSeasons([...localSelectedSeasons, season]);
         }
     };
 
     const handleSelectAll = () => {
-        if (localSelectedSeason.length === seasons.length) {
-            setLocalSelectedSeason([]);
+        if (localSelectedSeasons.length === seasons.length) {
+            setLocalSelectedSeasons([]);
         } else {
-            setLocalSelectedSeason(seasons);
+            setLocalSelectedSeasons(seasons);
         }
     };
 
     return (
         <div>
-            <button onClick={handleSelectAll}>
-                Select Seasons
+            <button onClick={() => setIsOpen(!isOpen)}>
+                Select Season
             </button>
-            <div>
-                <label>
-                    <input
-                        type="checkbox"
-                        checked={localSelectedSeason.length === seasons.length}
-                        onChange={handleSelectAll}
-                    />
-                    Select all
-                </label>
-            </div>
-            {seasons.map((season, index) => (
-                <div key={index}>
+            {isOpen && (  // Only show the dropdown when isOpen is true
+                <div className="dropdown">
                     <label>
                         <input
                             type="checkbox"
-                            checked={localSelectedSeason.includes(season)}
-                            onChange={() => handleSeasonChange(season)}
+                            checked={localSelectedSeasons.length === seasons.length}
+                            onChange={handleSelectAll}
                         />
-                        {season}
+                        Select all
                     </label>
+                    {seasons.map((season, index) => (
+                        <div key={index}>
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={localSelectedSeasons.includes(season)}
+                                    onChange={() => handleSeasonChange(season)}
+                                />
+                                {season}
+                            </label>
+                        </div>
+                    ))}
                 </div>
-            ))}
+            )}
         </div>
     );
 }
 
 export default EteHiverSelector;
+
