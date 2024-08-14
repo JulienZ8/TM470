@@ -42,16 +42,19 @@ def get_season_entries_grouped(db: Session):
             models.DimCalendar.season_name,
             models.DimCalendar.period_default,
             models.DimCalendar.season,
+            models.DimPassCategory.main.label("pass_category"),
             func.count(models.FactEntry.entry_date).label("entry_count"),  #Counts the entries for each period within the season
             total_entries_subquery.c.total_entries  #Includes the total number of entries for the season from the subquery
         )
         .join(models.DimCalendar.fact_entries)  #Joins DimCalendar with FactEntry to get the entries per period
+        .join(models.DimPassCategory, models.FactEntry.dim_pass_category_id == models.DimPassCategory.id)
         .join(total_entries_subquery, models.DimCalendar.season_name == total_entries_subquery.c.season_name)  
         #Joins the main query with the subquery on season_name to include the total entries for each season
 
         .group_by(models.DimCalendar.season_name, 
                   models.DimCalendar.period_default, 
-                  models.DimCalendar.season, 
+                  models.DimCalendar.season,
+                  models.DimPassCategory.main, 
                   total_entries_subquery.c.total_entries)
         #Groups the results by season_name, period_default, and total_entries to aggregate the data correctly
 
