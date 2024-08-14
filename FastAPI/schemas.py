@@ -29,6 +29,7 @@ class SeasonEntry(BaseModel):
 class SeasonEntryGrouped(BaseModel):
     season_name: str
     period_default: str
+    season: str
     entry_count : int
     total_entries: int
 

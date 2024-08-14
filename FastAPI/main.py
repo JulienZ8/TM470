@@ -72,3 +72,20 @@ def get_fact_entry_aggregated(
         raise HTTPException(status_code=404, detail="No data found")
 
     return [{"season_name": row[0], "period_default": row[1], "total_entries": row[2]} for row in results]
+
+
+@app.get("/entries/", response_model=List[schemas.FactEntry])
+async def read_entries(season_name: str = None, period_default: str = None, db: Session = Depends(get_db)):
+    return crud.get_entries(db, season_name=season_name, period_default=period_default)
+
+@app.get("/entries/periods", response_model=List[str])
+def get_periods(db: Session = Depends(get_db)):
+    periods = db.query(models.DimCalendar.period_default).distinct().all()
+    return [period.period_default for period in periods]
+#Fetches all unique period_default values from DimCalendar
+
+@app.get("/entries/seasons", response_model=List[str])
+def get_seasons(db: Session = Depends(get_db)):
+    seasons = db.query(models.DimCalendar.season_name).distinct().all()
+    return [season.season_name for season in seasons]
+#Fetches all unique season_name values from DimCalendar
