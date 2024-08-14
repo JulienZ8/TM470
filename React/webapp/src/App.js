@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import PeriodSelector from './components/PeriodSelector';
 import SeasonNameSelector from './components/SeasonNameSelector';
 import SeasonEntriesChartGrouped from './components/SeasonEntriesChartGrouped';
-import SeasonSelector from './components/SeasonSelector'; // Import the new selector
+import EteHiverSelector from './components/EteHiverSelector'; // Import the new selector
 
 function App() {
     const [selectedPeriods, setSelectedPeriods] = useState([]);
-    const [selectedSeasons, setSelectedSeasons] = useState([]);
     const [selectedSeasonNames, setSelectedSeasonNames] = useState([]);
-
+    const [selectedEteHiver, setSelectedEteHiver] = useState([]);
+    
     const handlePeriodChange = (periods) => {
         setSelectedPeriods(periods);
     };
@@ -17,22 +17,22 @@ function App() {
         setSelectedSeasonNames(seasonNames);
     };
 
-    const handleSeasonChange = (seasons) => {
-        setSelectedSeasons(seasons);
+    const handleEteHiverChange = (seasons) => {
+        setSelectedEteHiver(seasons);
     };
 
     return (
         <div style={{ display: 'flex', flexDirection: 'row', padding: '20px' }}>
             <div style={{ display: 'flex', flexDirection: 'column', marginRight: '20px' }}>
                 <PeriodSelector selectedPeriods={selectedPeriods} onPeriodChange={handlePeriodChange} />
-                <SeasonNameSelector selectedSeasons={selectedSeasonNames} onSeasonChange={handleSeasonNameChange} />
-                <SeasonSelector selectedSeason={selectedSeasons} onSeasonChange={handleSeasonChange} />
+                <SeasonNameSelector selectedSeasonNames={selectedSeasonNames} onSeasonChange={handleSeasonNameChange} />
+                <EteHiverSelector selectedEteHiver={selectedEteHiver} onSeasonChange={handleEteHiverChange} />
             </div>
             <div style={{ flex: 1 }}>
                 <SeasonEntriesChartGrouped
                     selectedPeriods={selectedPeriods}
-                    selectedSeasons={selectedSeasonNames}
-                    selectedSeasonNames={selectedSeasons}
+                    selectedSeasonNames={selectedSeasonNames}
+                    selectedEteHiver={selectedEteHiver}
                 />
             </div>
         </div>

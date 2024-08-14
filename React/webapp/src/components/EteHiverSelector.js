@@ -1,11 +1,9 @@
-// SeasonSelector.js
-
 import React, { useState, useEffect } from 'react';
 import api from '../api';
 
-function SeasonSelector({ selectedSeason, onSeasonChange }) {
+function EteHiverSelector({ selectedEteHiver, onSeasonChange }) {
     const [seasons, setSeasons] = useState([]);
-    const [localSelectedSeason, setLocalSelectedSeason] = useState(selectedSeason || []);
+    const [localSelectedSeason, setLocalSelectedSeason] = useState(selectedEteHiver || []);
 
     useEffect(() => {
         api.get('/seasonlist/')
@@ -69,4 +67,4 @@ function SeasonSelector({ selectedSeason, onSeasonChange }) {
     );
 }
 
-export default SeasonSelector;
+export default EteHiverSelector;

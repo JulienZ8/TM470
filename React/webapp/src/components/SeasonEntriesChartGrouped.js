@@ -7,7 +7,7 @@ import api from '../api';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasons = [], selectedSeasonNames = [] }) {
+function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames = [], selectedEteHiver = [] }) {
     const [seasonEntries, setSeasonEntries] = useState([]);
     const [error, setError] = useState(null);
 
@@ -25,10 +25,10 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasons = [],
     const filteredSeasonEntries = useMemo(() => {
         return seasonEntries.filter(entry => 
             (selectedPeriods.includes(entry.period_default)) &&
-            (selectedSeasons.includes(entry.season_name)) &&
-            (selectedSeasonNames.includes(entry.season))
+            (selectedSeasonNames.includes(entry.season_name)) &&
+            (selectedEteHiver.includes(entry.season))
         );
-    }, [seasonEntries, selectedPeriods, selectedSeasons, selectedSeasonNames]);
+    }, [seasonEntries, selectedPeriods, selectedSeasonNames, selectedEteHiver]);
 
     const chartData = useMemo(() => {
         const groupedData = {};
