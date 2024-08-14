@@ -92,3 +92,8 @@ def get_season_names(db: Session = Depends(get_db)):
 def get_season_names(db: Session = Depends(get_db)):
     seasons = db.query(models.DimCalendar.season).distinct().all()
     return [season.season for season in seasons]
+
+@app.get("/passlist/", response_model=List[str])
+def get_pass_list(db: Session = Depends(get_db)):
+    pass_categories = db.query(models.DimPassCategory.main).distinct().all()
+    return [category.main for category in pass_categories]
