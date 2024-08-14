@@ -1,3 +1,5 @@
+// SeasonEntriesChartGrouped.js
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
@@ -24,7 +26,7 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasons = [],
         return seasonEntries.filter(entry => 
             (selectedPeriods.includes(entry.period_default)) &&
             (selectedSeasons.includes(entry.season_name)) &&
-            (selectedSeasonNames.length === 0 || selectedSeasonNames.includes(entry.season))
+            (selectedSeasonNames.includes(entry.season))
         );
     }, [seasonEntries, selectedPeriods, selectedSeasons, selectedSeasonNames]);
 

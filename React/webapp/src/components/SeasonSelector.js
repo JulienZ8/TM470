@@ -1,35 +1,53 @@
-import React, { useState, useEffect } from 'react';
+// SeasonSelector.js
 
-function SeasonSelector({ seasons, onSeasonChange, selectedSeasons }) {
-    const [localSelectedSeasons, setLocalSelectedSeasons] = useState(selectedSeasons || []);
+import React, { useState, useEffect } from 'react';
+import api from '../api';
+
+function SeasonSelector({ selectedSeason, onSeasonChange }) {
+    const [seasons, setSeasons] = useState([]);
+    const [localSelectedSeason, setLocalSelectedSeason] = useState(selectedSeason || []);
 
     useEffect(() => {
-        onSeasonChange(localSelectedSeasons);
-    }, [localSelectedSeasons, onSeasonChange]);
+        api.get('/seasonlist/')
+            .then(response => {
+                setSeasons(response.data);
+                setLocalSelectedSeason(response.data); // Select all by default
+            })
+            .catch(error => {
+                console.error('Error fetching seasons', error);
+            });
+    }, []);
+
+    useEffect(() => {
+        onSeasonChange(localSelectedSeason);
+    }, [localSelectedSeason, onSeasonChange]);
 
     const handleSeasonChange = (season) => {
-        if (localSelectedSeasons.includes(season)) {
-            setLocalSelectedSeasons(localSelectedSeasons.filter(s => s !== season));
+        if (localSelectedSeason.includes(season)) {
+            setLocalSelectedSeason(localSelectedSeason.filter(s => s !== season));
         } else {
-            setLocalSelectedSeasons([...localSelectedSeasons, season]);
+            setLocalSelectedSeason([...localSelectedSeason, season]);
         }
     };
 
     const handleSelectAll = () => {
-        if (localSelectedSeasons.length === seasons.length) {
-            setLocalSelectedSeasons([]);
+        if (localSelectedSeason.length === seasons.length) {
+            setLocalSelectedSeason([]);
         } else {
-            setLocalSelectedSeasons(seasons);
+            setLocalSelectedSeason(seasons);
         }
     };
 
     return (
         <div>
+            <button onClick={handleSelectAll}>
+                Select Seasons
+            </button>
             <div>
                 <label>
                     <input
                         type="checkbox"
-                        checked={localSelectedSeasons.length === seasons.length}
+                        checked={localSelectedSeason.length === seasons.length}
                         onChange={handleSelectAll}
                     />
                     Select all
@@ -40,7 +58,7 @@ function SeasonSelector({ seasons, onSeasonChange, selectedSeasons }) {
                     <label>
                         <input
                             type="checkbox"
-                            checked={localSelectedSeasons.includes(season)}
+                            checked={localSelectedSeason.includes(season)}
                             onChange={() => handleSeasonChange(season)}
                         />
                         {season}
