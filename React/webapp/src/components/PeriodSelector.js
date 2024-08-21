@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
 
-import { Dropdown, DropdownButton, FormCheck } from 'react-bootstrap';
+import { Dropdown, FormCheck, Form } from 'react-bootstrap';
+import Accordion from 'react-bootstrap/Accordion';
 
 function PeriodSelector({ onPeriodChange }) {
     const [periods, setPeriods] = useState([]);
     const [localSelectedPeriods, setLocalSelectedPeriods] = useState([]);
-    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
         // Fetch periods from the API only once
@@ -41,7 +41,30 @@ function PeriodSelector({ onPeriodChange }) {
     };
 
     return (
-        <Dropdown className="d-inline mx-2" autoClose="outside">
+
+        <Accordion>
+            <Accordion.Item eventKey="0">
+                <Accordion.Header>Période</Accordion.Header>
+                    <Accordion.Body>
+                        <Form.Check
+                            type="checkbox"
+                            label={localSelectedPeriods.length === periods.length ? "Deselect All" : "Select All"}
+                            checked={localSelectedPeriods.length === periods.length}
+                            onChange={handleSelectAll}
+                        />
+                        {periods.map((period, index) => (
+                            <Form.Check
+                                key={index}
+                                type="checkbox"
+                                label={period}
+                                checked={localSelectedPeriods.includes(period)}
+                                onChange={() => handlePeriodChange(period)}
+                            />
+                        ))}
+                    </Accordion.Body>
+            </Accordion.Item>
+        </Accordion>
+        /*<Dropdown className="d-inline mx-2" autoClose="outside">
             <Dropdown.Toggle id="dropdown-autoclose-outside">
                 Période
             </Dropdown.Toggle>
@@ -69,7 +92,7 @@ function PeriodSelector({ onPeriodChange }) {
                     </Dropdown.Item>
                 ))}
             </Dropdown.Menu>
-        </Dropdown>
+        </Dropdown>*/
     );
 }
 

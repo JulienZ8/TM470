@@ -70,6 +70,8 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
     }, [filteredSeasonEntries, selectedPeriods]);
 
     const options = {
+        responsive: true,  // Enable responsiveness
+        maintainAspectRatio: true,  // Disable maintaining the aspect ratio
         scales: {
             x: { stacked: true },
             y: { stacked: true, beginAtZero: true },

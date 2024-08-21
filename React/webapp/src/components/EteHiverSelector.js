@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
 import { Dropdown, DropdownButton, FormCheck } from 'react-bootstrap';
+import Accordion from 'react-bootstrap/Accordion';
+import Form from 'react-bootstrap/Form';
 
 function EteHiverSelector({ selectedEteHiver, onSeasonChange }) {
     const [seasons, setSeasons] = useState([]);
@@ -39,7 +41,29 @@ function EteHiverSelector({ selectedEteHiver, onSeasonChange }) {
     };
 
     return (
-        <Dropdown className="d-inline mx-2" autoClose="outside">
+        <Accordion>
+            <Accordion.Item eventKey="0">
+                <Accordion.Header>Été/hiver</Accordion.Header>
+                <Accordion.Body>
+                    <Form.Check
+                        type="checkbox"
+                        label={localSelectedSeasons.length === seasons.length ? "Deselect All" : "Select All"}
+                        checked={localSelectedSeasons.length === seasons.length}
+                        onChange={handleSelectAll}
+                    />
+                    {seasons.map((season, index) => (
+                        <Form.Check
+                            key={index}
+                            type="checkbox"
+                            label={season}
+                            checked={localSelectedSeasons.includes(season)}
+                            onChange={() => handleSeasonChange(season)}
+                        />
+                    ))}
+                </Accordion.Body>
+            </Accordion.Item>
+        </Accordion>
+        /*<Dropdown className="d-inline mx-2" autoClose="outside">
             <Dropdown.Toggle id="dropdown-autoclose-outside">
                 Été/hiver
             </Dropdown.Toggle>
@@ -67,7 +91,7 @@ function EteHiverSelector({ selectedEteHiver, onSeasonChange }) {
                     </Dropdown.Item>
                 ))}
             </Dropdown.Menu>
-        </Dropdown>
+        </Dropdown>*/
     );
 }
 

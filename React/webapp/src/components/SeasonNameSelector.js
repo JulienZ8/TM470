@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
-import { Dropdown, DropdownButton, FormCheck } from 'react-bootstrap';
+//import { Dropdown, FormCheck, Form } from 'react-bootstrap';
+import Accordion from 'react-bootstrap/Accordion';
+import Form from 'react-bootstrap/Form';
 
 function SeasonNameSelector({ onSeasonChange }) {
     const [seasonNames, setSeasonNames] = useState([]);
@@ -38,7 +40,31 @@ function SeasonNameSelector({ onSeasonChange }) {
     };
 
     return (
-        <Dropdown className="d-inline mx-2" autoClose="outside">
+        <Accordion >
+            <Accordion.Item eventKey="0">
+                <Accordion.Header>Saison</Accordion.Header>
+                <Accordion.Body>
+                    <Form.Check
+                        type="checkbox"
+                        label={localSelectedSeasonNames.length === seasonNames.length ? "Deselect All" : "Select All"}
+                        checked={localSelectedSeasonNames.length === seasonNames.length}
+                        onChange={handleSelectAll}
+                    />
+                    {seasonNames.map((seasonName, index) => (
+                        <Form.Check
+                            key={index}
+                            type="checkbox"
+                            label={seasonName}
+                            checked={localSelectedSeasonNames.includes(seasonName)}
+                            onChange={() => handleSeasonChange(seasonName)}
+                        />
+                    ))}
+                </Accordion.Body>
+            </Accordion.Item>
+        </Accordion>
+
+
+        /*<Dropdown className="d-inline mx-2" autoClose="outside">
             <Dropdown.Toggle id="dropdown-autoclose-outside">
                 Saison
             </Dropdown.Toggle>
@@ -66,7 +92,7 @@ function SeasonNameSelector({ onSeasonChange }) {
                     </Dropdown.Item>
                 ))}
             </Dropdown.Menu>
-        </Dropdown>
+        </Dropdown>*/
     );
 }
 
