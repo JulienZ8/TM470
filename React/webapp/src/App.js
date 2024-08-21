@@ -4,6 +4,7 @@ import SeasonNameSelector from './components/SeasonNameSelector';
 import EteHiverSelector from './components/EteHiverSelector';
 import PassSelector from './components/PassSelector';  // New import
 import SeasonEntriesChartGrouped from './components/SeasonEntriesChartGrouped';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
     const [selectedPeriods, setSelectedPeriods] = useState([]);

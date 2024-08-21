@@ -22,12 +22,14 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
     }, []);
 
     const filteredSeasonEntries = useMemo(() => {
-        return seasonEntries.filter(entry => 
+        const filtered = seasonEntries.filter(entry => 
             selectedPeriods.includes(entry.period_default) &&
             selectedSeasonNames.includes(entry.season_name) &&
             selectedEteHiver.includes(entry.season) &&
             (selectedPass === 'All' || entry.pass_category === selectedPass)
         );
+        console.log("Filtered Entries:", filtered); // Debugging line
+        return filtered;
     }, [seasonEntries, selectedPeriods, selectedSeasonNames, selectedEteHiver, selectedPass]);
 
     const chartData = useMemo(() => {

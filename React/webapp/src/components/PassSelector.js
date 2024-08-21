@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
+import { Dropdown, DropdownButton, Form } from 'react-bootstrap';
 
 function PassSelector({ onPassChange }) {
     const [passCategories, setPassCategories] = useState([]);
@@ -9,8 +10,7 @@ function PassSelector({ onPassChange }) {
     useEffect(() => {
         api.get('/passlist/')
             .then(response => {
-                setPassCategories(['All', ...response.data]);
-                setSelectedPass('All'); // Default to 'All'
+                setPassCategories(['All', ...response.data]);  // Include 'All' option
             })
             .catch(error => {
                 console.error('Error fetching pass categories', error);
@@ -23,27 +23,23 @@ function PassSelector({ onPassChange }) {
     };
 
     return (
-        <div>
-            <button onClick={() => setIsOpen(!isOpen)}>
+        <Dropdown className="d-inline mx-2" autoClose="outside" show={isOpen} onToggle={() => setIsOpen(!isOpen)}>
+            <Dropdown.Toggle id="dropdown-autoclose-outside">
                 Catégorie de forfait
-            </button>
-            {isOpen && (
-                <div className="dropdown">
-                    {passCategories.map((pass, index) => (
-                        <div key={index}>
-                            <label>
-                                <input
-                                    type="radio"
-                                    checked={selectedPass === pass}
-                                    onChange={() => handlePassChange(pass)}
-                                />
-                                {pass}
-                            </label>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+                {passCategories.map((pass, index) => (
+                    <Dropdown.Item as="button" key={index} onClick={() => handlePassChange(pass)}>
+                        <Form.Check
+                            type="radio"
+                            label={pass}
+                            checked={selectedPass === pass}
+                            onChange={() => handlePassChange(pass)}
+                        />
+                    </Dropdown.Item>
+                ))}
+            </Dropdown.Menu>
+        </Dropdown>
     );
 }
 

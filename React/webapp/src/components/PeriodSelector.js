@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
 
+import { Dropdown, DropdownButton, FormCheck } from 'react-bootstrap';
+
 function PeriodSelector({ onPeriodChange }) {
     const [periods, setPeriods] = useState([]);
     const [localSelectedPeriods, setLocalSelectedPeriods] = useState([]);
@@ -39,35 +41,35 @@ function PeriodSelector({ onPeriodChange }) {
     };
 
     return (
-        <div>
-            <button onClick={() => setIsOpen(!isOpen)}>
+        <Dropdown className="d-inline mx-2" autoClose="outside">
+            <Dropdown.Toggle id="dropdown-autoclose-outside">
                 Période
-            </button>
-            {isOpen && (
-                <div className="dropdown">
-                    <label>
-                        <input
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+                <Dropdown.Item as="button" onClick={handleSelectAll}>
+                    <FormCheck
+                        type="checkbox"
+                        label={localSelectedPeriods.length === periods.length ? "Deselect All" : "Select All"}
+                        checked={localSelectedPeriods.length === periods.length}
+                        onChange={handleSelectAll}
+                    />
+                </Dropdown.Item>
+                {periods.map((period, index) => (
+                    <Dropdown.Item
+                        as="button"
+                        key={index}
+                        onClick={() => handlePeriodChange(period)}
+                    >
+                        <FormCheck
                             type="checkbox"
-                            checked={localSelectedPeriods.length === periods.length}
-                            onChange={handleSelectAll}
+                            label={period}
+                            checked={localSelectedPeriods.includes(period)}
+                            onChange={() => handlePeriodChange(period)}
                         />
-                        Select all
-                    </label>
-                    {periods.map((period, index) => (
-                        <div key={index}>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    checked={localSelectedPeriods.includes(period)}
-                                    onChange={() => handlePeriodChange(period)}
-                                />
-                                {period}
-                            </label>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
+                    </Dropdown.Item>
+                ))}
+            </Dropdown.Menu>
+        </Dropdown>
     );
 }
 

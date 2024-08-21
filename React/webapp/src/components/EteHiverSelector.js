@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
+import { Dropdown, DropdownButton, FormCheck } from 'react-bootstrap';
 
 function EteHiverSelector({ selectedEteHiver, onSeasonChange }) {
     const [seasons, setSeasons] = useState([]);
@@ -38,35 +39,35 @@ function EteHiverSelector({ selectedEteHiver, onSeasonChange }) {
     };
 
     return (
-        <div>
-            <button onClick={() => setIsOpen(!isOpen)}>
+        <Dropdown className="d-inline mx-2" autoClose="outside">
+            <Dropdown.Toggle id="dropdown-autoclose-outside">
                 Été/hiver
-            </button>
-            {isOpen && (  // Only show the dropdown when isOpen is true
-                <div className="dropdown">
-                    <label>
-                        <input
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+                <Dropdown.Item as="button" onClick={handleSelectAll}>
+                    <FormCheck
+                        type="checkbox"
+                        label={localSelectedSeasons.length === seasons.length ? "Deselect All" : "Select All"}
+                        checked={localSelectedSeasons.length === seasons.length}
+                        onChange={handleSelectAll}
+                    />
+                </Dropdown.Item>
+                {seasons.map((season, index) => (
+                    <Dropdown.Item
+                        as="button"
+                        key={index}
+                        onClick={() => handleSeasonChange(season)}
+                    >
+                        <FormCheck
                             type="checkbox"
-                            checked={localSelectedSeasons.length === seasons.length}
-                            onChange={handleSelectAll}
+                            label={season}
+                            checked={localSelectedSeasons.includes(season)}
+                            onChange={() => handleSeasonChange(season)}
                         />
-                        Select all
-                    </label>
-                    {seasons.map((season, index) => (
-                        <div key={index}>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    checked={localSelectedSeasons.includes(season)}
-                                    onChange={() => handleSeasonChange(season)}
-                                />
-                                {season}
-                            </label>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
+                    </Dropdown.Item>
+                ))}
+            </Dropdown.Menu>
+        </Dropdown>
     );
 }
 

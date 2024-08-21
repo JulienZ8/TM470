@@ -1,74 +1,74 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
+import { Dropdown, DropdownButton, FormCheck } from 'react-bootstrap';
 
 function SeasonNameSelector({ onSeasonChange }) {
-    const [seasons, setSeasons] = useState([]);
-    const [localSelectedSeasons, setLocalSelectedSeasons] = useState([]);
-    const [isOpen, setIsOpen] = useState(false);
+    const [seasonNames, setSeasonNames] = useState([]);
+    const [localSelectedSeasonNames, setLocalSelectedSeasonNames] = useState([]);
 
     useEffect(() => {
-        // Fetch seasons from the API only once
         api.get('/seasonnamelist/')
             .then(response => {
-                const fetchedSeasons = response.data;
-                setSeasons(fetchedSeasons);
-                setLocalSelectedSeasons(fetchedSeasons); // Select all by default
-                onSeasonChange(fetchedSeasons); // Notify parent component with initial selection
+                const fetchedSeasonNames = response.data;
+                setSeasonNames(fetchedSeasonNames);
+                setLocalSelectedSeasonNames(fetchedSeasonNames); // Select all by default
+                onSeasonChange(fetchedSeasonNames); // Notify parent component with initial selection
             })
             .catch(error => {
-                console.error('Error fetching seasons', error);
+                console.error('Error fetching season names', error);
             });
-    }, []); // Empty dependency array ensures this effect runs only once
+    }, []);
 
-    const handleSeasonChange = (season) => {
-        const newSelectedSeasons = localSelectedSeasons.includes(season)
-            ? localSelectedSeasons.filter(s => s !== season)
-            : [...localSelectedSeasons, season];
-        setLocalSelectedSeasons(newSelectedSeasons);
-        onSeasonChange(newSelectedSeasons);
+    const handleSeasonChange = (seasonName) => {
+        const newSelectedSeasonNames = localSelectedSeasonNames.includes(seasonName)
+            ? localSelectedSeasonNames.filter(s => s !== seasonName)
+            : [...localSelectedSeasonNames, seasonName];
+        setLocalSelectedSeasonNames(newSelectedSeasonNames);
+        onSeasonChange(newSelectedSeasonNames);
     };
 
     const handleSelectAll = () => {
-        if (localSelectedSeasons.length === seasons.length) {
-            setLocalSelectedSeasons([]);
+        if (localSelectedSeasonNames.length === seasonNames.length) {
+            setLocalSelectedSeasonNames([]);
             onSeasonChange([]);
         } else {
-            setLocalSelectedSeasons(seasons);
-            onSeasonChange(seasons);
+            setLocalSelectedSeasonNames(seasonNames);
+            onSeasonChange(seasonNames);
         }
     };
 
     return (
-        <div>
-            <button onClick={() => setIsOpen(!isOpen)}>
+        <Dropdown className="d-inline mx-2" autoClose="outside">
+            <Dropdown.Toggle id="dropdown-autoclose-outside">
                 Saison
-            </button>
-            {isOpen && (
-                <div className="dropdown">
-                    <label>
-                        <input
+            </Dropdown.Toggle>
+            <Dropdown.Menu>
+                <Dropdown.Item as="button" onClick={handleSelectAll}>
+                    <FormCheck
+                        type="checkbox"
+                        label={localSelectedSeasonNames.length === seasonNames.length ? "Deselect All" : "Select All"}
+                        checked={localSelectedSeasonNames.length === seasonNames.length}
+                        onChange={handleSelectAll}
+                    />
+                </Dropdown.Item>
+                {seasonNames.map((seasonName, index) => (
+                    <Dropdown.Item
+                        as="button"
+                        key={index}
+                        onClick={() => handleSeasonChange(seasonName)}
+                    >
+                        <FormCheck
                             type="checkbox"
-                            checked={localSelectedSeasons.length === seasons.length}
-                            onChange={handleSelectAll}
+                            label={seasonName}
+                            checked={localSelectedSeasonNames.includes(seasonName)}
+                            onChange={() => handleSeasonChange(seasonName)}
                         />
-                        Select all
-                    </label>
-                    {seasons.map((season, index) => (
-                        <div key={index}>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    checked={localSelectedSeasons.includes(season)}
-                                    onChange={() => handleSeasonChange(season)}
-                                />
-                                {season}
-                            </label>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
+                    </Dropdown.Item>
+                ))}
+            </Dropdown.Menu>
+        </Dropdown>
     );
 }
 
 export default SeasonNameSelector;
+
