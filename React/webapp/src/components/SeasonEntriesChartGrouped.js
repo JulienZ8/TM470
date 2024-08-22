@@ -83,14 +83,15 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
                     label: (context) => {
                         const period = context.dataset.label;
                         const entryCount = context.raw;
-                        const seasonEntry = filteredSeasonEntries.find(
-                            entry => entry.season_name === context.label && entry.period_default === period
-                        );
-                        const totalEntries = seasonEntry.total_entries;
+                        // Calculate the total entries for the hovered season
+                        const seasonTotal = filteredSeasonEntries
+                            .filter(entry => entry.season_name === context.label)
+                            .reduce((total, entry) => total + entry.entry_count, 0);
+
                         return [
                             `Period: ${period}`,
                             `Entries: ${entryCount}`,
-                            `Total: ${totalEntries}`,
+                            `Total: ${seasonTotal}`,
                         ];
                     },
                 },

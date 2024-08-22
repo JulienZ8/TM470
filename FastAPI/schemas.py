@@ -38,9 +38,9 @@ class SeasonEntryGrouped(BaseModel):
     season_name: str
     period_default: str
     season: str
-    pass_category: str
+    pass_category: Optional[str]
     entry_count : int
-    total_entries: int
+    #total_entries: Optional[int]
 
     class Config:
         from_attributes = True

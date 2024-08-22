@@ -12,7 +12,7 @@ function PassSelector({ onPassChange }) {
     useEffect(() => {
         api.get('/passlist/')
             .then(response => {
-                setPassCategories(['All', ...response.data]); //Prepend 'All' to the list of categories to allow selecting all passes
+                setPassCategories(['All', 'Non-classifié', ...response.data]); //Prepend 'All' add 'Non-classifié' to the list of categories
             })
             .catch(error => {
                 console.error('Error fetching pass categories', error);
@@ -22,7 +22,7 @@ function PassSelector({ onPassChange }) {
     //Function to handle pass category selection
     const handlePassChange = (pass) => {
         setSelectedPass(pass);  //Update the selected pass state
-        onPassChange(pass);  //Notify the parent component of the selected pass
+        onPassChange(pass === 'Non-classifié' ? null : pass);  // Notify the parent component, using null for "Non-classifié"
     };
 
     return (       
