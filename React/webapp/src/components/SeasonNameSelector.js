@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
-//import { Dropdown, FormCheck, Form } from 'react-bootstrap';
 import Accordion from 'react-bootstrap/Accordion';
 import Form from 'react-bootstrap/Form';
 
@@ -63,36 +62,6 @@ function SeasonNameSelector({ onSeasonChange }) {
             </Accordion.Item>
         </Accordion>
 
-
-        /*<Dropdown className="d-inline mx-2" autoClose="outside">
-            <Dropdown.Toggle id="dropdown-autoclose-outside">
-                Saison
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-                <Dropdown.Item as="button" onClick={handleSelectAll}>
-                    <FormCheck
-                        type="checkbox"
-                        label={localSelectedSeasonNames.length === seasonNames.length ? "Deselect All" : "Select All"}
-                        checked={localSelectedSeasonNames.length === seasonNames.length}
-                        onChange={handleSelectAll}
-                    />
-                </Dropdown.Item>
-                {seasonNames.map((seasonName, index) => (
-                    <Dropdown.Item
-                        as="button"
-                        key={index}
-                        onClick={() => handleSeasonChange(seasonName)}
-                    >
-                        <FormCheck
-                            type="checkbox"
-                            label={seasonName}
-                            checked={localSelectedSeasonNames.includes(seasonName)}
-                            onChange={() => handleSeasonChange(seasonName)}
-                        />
-                    </Dropdown.Item>
-                ))}
-            </Dropdown.Menu>
-        </Dropdown>*/
     );
 }
 

@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
-import { Dropdown, DropdownButton, FormCheck } from 'react-bootstrap';
 import Accordion from 'react-bootstrap/Accordion';
 import Form from 'react-bootstrap/Form';
 
 function EteHiverSelector({ selectedEteHiver, onSeasonChange }) {
     const [seasons, setSeasons] = useState([]);
     const [localSelectedSeasons, setLocalSelectedSeasons] = useState(selectedEteHiver || []);
-    const [isOpen, setIsOpen] = useState(false);  // State to track if dropdown is open
 
     useEffect(() => {
         api.get('/seasonlist/')
@@ -63,35 +61,7 @@ function EteHiverSelector({ selectedEteHiver, onSeasonChange }) {
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>
-        /*<Dropdown className="d-inline mx-2" autoClose="outside">
-            <Dropdown.Toggle id="dropdown-autoclose-outside">
-                Été/hiver
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-                <Dropdown.Item as="button" onClick={handleSelectAll}>
-                    <FormCheck
-                        type="checkbox"
-                        label={localSelectedSeasons.length === seasons.length ? "Deselect All" : "Select All"}
-                        checked={localSelectedSeasons.length === seasons.length}
-                        onChange={handleSelectAll}
-                    />
-                </Dropdown.Item>
-                {seasons.map((season, index) => (
-                    <Dropdown.Item
-                        as="button"
-                        key={index}
-                        onClick={() => handleSeasonChange(season)}
-                    >
-                        <FormCheck
-                            type="checkbox"
-                            label={season}
-                            checked={localSelectedSeasons.includes(season)}
-                            onChange={() => handleSeasonChange(season)}
-                        />
-                    </Dropdown.Item>
-                ))}
-            </Dropdown.Menu>
-        </Dropdown>*/
+
     );
 }
 

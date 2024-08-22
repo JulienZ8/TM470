@@ -47,26 +47,3 @@ function PassSelector({ onPassChange }) {
 }
 
 export default PassSelector;
-/*
-<Dropdown className="d-inline mx-2" autoClose="outside"> 
-<Dropdown.Toggle id="dropdown-autoclose-outside">
-Catégorie de forfait
-</Dropdown.Toggle>
-<Dropdown.Menu>
-{passCategories.map((pass, index) => (
-    <Dropdown.Item 
-        as="button" 
-        key={index} 
-        onClick={() => handlePassChange(pass)}  //Handle item selection
-    >
-        <Form.Check
-            type="radio"  //radio button to allow single selection
-            label={pass}  //Display the pass category name
-            checked={selectedPass === pass}  //Check if this pass is selected
-            onChange={() => handlePassChange(pass)}  //Handle changes in selection
-        />
-    </Dropdown.Item>
-))}
-</Dropdown.Menu>
-</Dropdown>
-*/

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
 
-import { Dropdown, FormCheck, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import Accordion from 'react-bootstrap/Accordion';
 
 function PeriodSelector({ onPeriodChange }) {
@@ -64,35 +64,7 @@ function PeriodSelector({ onPeriodChange }) {
                     </Accordion.Body>
             </Accordion.Item>
         </Accordion>
-        /*<Dropdown className="d-inline mx-2" autoClose="outside">
-            <Dropdown.Toggle id="dropdown-autoclose-outside">
-                Période
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-                <Dropdown.Item as="button" onClick={handleSelectAll}>
-                    <FormCheck
-                        type="checkbox"
-                        label={localSelectedPeriods.length === periods.length ? "Deselect All" : "Select All"}
-                        checked={localSelectedPeriods.length === periods.length}
-                        onChange={handleSelectAll}
-                    />
-                </Dropdown.Item>
-                {periods.map((period, index) => (
-                    <Dropdown.Item
-                        as="button"
-                        key={index}
-                        onClick={() => handlePeriodChange(period)}
-                    >
-                        <FormCheck
-                            type="checkbox"
-                            label={period}
-                            checked={localSelectedPeriods.includes(period)}
-                            onChange={() => handlePeriodChange(period)}
-                        />
-                    </Dropdown.Item>
-                ))}
-            </Dropdown.Menu>
-        </Dropdown>*/
+
     );
 }
 
