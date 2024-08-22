@@ -5,7 +5,7 @@ import api from '../api';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames = [], selectedEteHiver = [], selectedPass = 'All' }) {
+function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames = [], selectedEteHiver = [], selectedPass = 'All', onFilteredDataChange }) {
     const [seasonEntries, setSeasonEntries] = useState([]);
     const [error, setError] = useState(null);
     const [colorMap, setColorMap] = useState({});  // Initialize color map state
@@ -29,6 +29,10 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
             (selectedPass === 'All' || entry.pass_category === selectedPass)
         );
         console.log("Filtered Entries:", filtered); // Debugging line
+        
+        // Pass the filtered data to the parent via callback
+        onFilteredDataChange(filtered);
+
         return filtered;
     }, [seasonEntries, selectedPeriods, selectedSeasonNames, selectedEteHiver, selectedPass]);
 
@@ -117,4 +121,3 @@ function getRandomColor() {
 }
 
 export default SeasonEntriesChartGrouped;
-
