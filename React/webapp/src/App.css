@@ -1,0 +1,12 @@
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 30vh; /* Adjust this as needed */
+  max-height: 30vh;
+}
+
+.menu {
+  width: 250px; /* Set your desired fixed width */
+  min-width: 250px; /* Ensure the width doesn't shrink below this value */
+  max-width: 250px; /* Ensure the width doesn't expand beyond this value */
+}
