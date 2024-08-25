@@ -5,10 +5,10 @@ import api from '../api';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames = [], selectedEteHiver = [], selectedPass = 'All', onFilteredDataChange }) {
+function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames = [], selectedEteHiver = [], selectedPasses = [], onFilteredDataChange }) {
     const [seasonEntries, setSeasonEntries] = useState([]);
     const [error, setError] = useState(null);
-    const [colorMap, setColorMap] = useState({});  // Initialize color map state
+    const [colorMap, setColorMap] = useState({});
 
     useEffect(() => {
         api.get('/season-entries-grouped/')
@@ -26,19 +26,18 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
             selectedPeriods.includes(entry.period_default) &&
             selectedSeasonNames.includes(entry.season_name) &&
             selectedEteHiver.includes(entry.season) &&
-            (selectedPass === 'All' || entry.pass_category === selectedPass)
+            selectedPasses.includes(entry.pass_category)
         );
-        console.log("Filtered Entries:", filtered); // Debugging line
-        
-        // Pass the filtered data to the parent via callback
+
+        console.log("Filtered Entries:", filtered); 
         onFilteredDataChange(filtered);
 
         return filtered;
-    }, [seasonEntries, selectedPeriods, selectedSeasonNames, selectedEteHiver, selectedPass]);
+    }, [seasonEntries, selectedPeriods, selectedSeasonNames, selectedEteHiver, selectedPasses]);
 
     const chartData = useMemo(() => {
         const groupedData = {};
-        const newColorMap = { ...colorMap };  // Create a copy of the current color map
+        const newColorMap = { ...colorMap };
 
         filteredSeasonEntries.forEach(entry => {
             const season = entry.season_name;
@@ -62,8 +61,8 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
         const datasets = selectedPeriods.map(period => ({
             label: period,
             data: seasons.map(season => groupedData[season][period] || 0),
-            backgroundColor: newColorMap[period],  
-            borderColor: newColorMap[period],  
+            backgroundColor: newColorMap[period],
+            borderColor: newColorMap[period],
             borderWidth: 0,
         }));
 
@@ -74,9 +73,9 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
     }, [filteredSeasonEntries, selectedPeriods]);
 
     const options = {
-        responsive: true,  // Enable responsiveness
+        responsive: true,
         aspectRatio: 3,
-        maintainAspectRatio: false,  // Disable maintaining the aspect ratio
+        maintainAspectRatio: false,
         scales: {
             x: { stacked: true },
             y: { stacked: true, beginAtZero: true },
@@ -88,7 +87,6 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
                     label: (context) => {
                         const period = context.dataset.label;
                         const entryCount = context.raw;
-                        // Calculate the total entries for the hovered season
                         const seasonTotal = filteredSeasonEntries
                             .filter(entry => entry.season_name === context.label)
                             .reduce((total, entry) => total + entry.entry_count, 0);
@@ -108,7 +106,6 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
         <div className="chart-container">
             <h2>Premières entrées</h2>
             {error ? <p>{error}</p> : <Bar data={chartData} options={options} />}
-
         </div>
     );
 }

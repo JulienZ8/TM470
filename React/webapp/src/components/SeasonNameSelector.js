@@ -10,10 +10,10 @@ function SeasonNameSelector({ onSeasonChange }) {
     useEffect(() => {
         api.get('/seasonnamelist/')
             .then(response => {
-                const fetchedSeasonNames = response.data;
-                setSeasonNames(fetchedSeasonNames);
-                setLocalSelectedSeasonNames(fetchedSeasonNames); // Select all by default
-                onSeasonChange(fetchedSeasonNames); // Notify parent component with initial selection
+                const sortedSeasons = response.data.sort(); // Sort seasons alphabetically (assumes chronological order)
+                setSeasonNames(sortedSeasons);
+                setLocalSelectedSeasonNames(sortedSeasons); // Select all by default
+                onSeasonChange(sortedSeasons); // Notify parent component with initial selection
             })
             .catch(error => {
                 console.error('Error fetching season names', error);

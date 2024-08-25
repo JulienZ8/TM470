@@ -8,8 +8,7 @@ function ReferenceSeasonSelector({ selectedReferenceSeason, onReferenceSeasonCha
     const [localSelectedSeason, setLocalSelectedSeason] = useState(selectedReferenceSeason || "");
 
     useEffect(() => {
-        // Fetch seasons from the API
-        api.get('/seasonnamelist/')
+        api.get('/seasonnamelist/') // Fetch seasons from the API
             .then(response => {
                 const sortedSeasons = response.data.sort(); // Sort seasons chronologically
                 setSeasons(sortedSeasons);

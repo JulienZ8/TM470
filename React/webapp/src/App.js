@@ -14,7 +14,7 @@ function App() {
     const [selectedPeriods, setSelectedPeriods] = useState([]);
     const [selectedSeasonNames, setSelectedSeasonNames] = useState([]);
     const [selectedSeasons, setSelectedSeasons] = useState([]);
-    const [selectedPass, setSelectedPass] = useState('All');
+    const [selectedPasses, setSelectedPass] = useState('All');
     const [referenceSeason, setReferenceSeason] = useState("");
     const [filteredData, setFilteredData] = useState([]);  // State to hold the filtered data
 
@@ -60,7 +60,7 @@ function App() {
                             selectedPeriods={selectedPeriods}
                             selectedSeasonNames={selectedSeasonNames}
                             selectedEteHiver={selectedSeasons}
-                            selectedPass={selectedPass}
+                            selectedPasses={selectedPasses}
                             onFilteredDataChange={handleFilteredDataChange}  // Pass filtered data up to the parent
                         />
             </div>  

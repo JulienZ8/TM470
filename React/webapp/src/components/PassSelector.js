@@ -1,42 +1,67 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
+import { Form } from 'react-bootstrap';
 import Accordion from 'react-bootstrap/Accordion';
-import Form from 'react-bootstrap/Form';
 
 function PassSelector({ onPassChange }) {
-    const [passCategories, setPassCategories] = useState([]); //useState to store list of pass categories fetched from the API
-    const [selectedPass, setSelectedPass] = useState('All'); //useState to store the currently selected pass category, defaulting to 'All'
-    //const [isOpen, setIsOpen] = useState(false); //useState to manage the open/close status of the dropdown menu
+    const [passCategories, setPassCategories] = useState([]);
+    const [selectedPasses, setSelectedPasses] = useState([]);
 
-    // useEffect to fetch pass categories from the API when the component mounts
     useEffect(() => {
         api.get('/passlist/')
             .then(response => {
-                setPassCategories(['All', 'Non-classifié', ...response.data]); //Prepend 'All' add 'Non-classifié' to the list of categories
+                const fetchedPasses = ['Non-classifié', ...response.data]; // Add "Non-classifié" to the list
+                setPassCategories(fetchedPasses);
+                setSelectedPasses(fetchedPasses); // Select all by default
+                onPassChange(fetchedPasses.map(pass => pass === 'Non-classifié' ? null : pass)); // Map "Non-classifié" to null
             })
             .catch(error => {
                 console.error('Error fetching pass categories', error);
             });
-    }, []);  //Empty dependency array means this effect runs only once, after the initial render
+    }, []);
 
-    //Function to handle pass category selection
     const handlePassChange = (pass) => {
-        setSelectedPass(pass);  //Update the selected pass state
-        onPassChange(pass === 'Non-classifié' ? null : pass);  // Notify the parent component, using null for "Non-classifié"
+        let newSelectedPasses = [];
+
+        if (pass === 'Non-classifié') {
+            newSelectedPasses = selectedPasses.includes(pass) ? [] : ['Non-classifié'];
+        } else {
+            newSelectedPasses = selectedPasses.includes(pass)
+                ? selectedPasses.filter(p => p !== pass)
+                : [...selectedPasses.filter(p => p !== 'Non-classifié'), pass];
+        }
+
+        setSelectedPasses(newSelectedPasses);
+        onPassChange(newSelectedPasses.map(p => p === 'Non-classifié' ? null : p)); // Map "Non-classifié" to null
     };
 
-    return (       
+    const handleSelectAll = () => {
+        if (selectedPasses.length === passCategories.length) {
+            setSelectedPasses([]);
+            onPassChange([]);
+        } else {
+            setSelectedPasses(passCategories);
+            onPassChange(passCategories.map(pass => pass === 'Non-classifié' ? null : pass)); // Map "Non-classifié" to null
+        }
+    };
+
+    return (
         <Accordion>
             <Accordion.Item eventKey="0">
                 <Accordion.Header>Catégorie de forfait</Accordion.Header>
                 <Accordion.Body>
-                    {/* Loop over the pass categories to create a checkbox for each */}
+                    <Form.Check
+                        type="checkbox"
+                        label={selectedPasses.length === passCategories.length ? "Deselect All" : "Select All"}
+                        checked={selectedPasses.length === passCategories.length}
+                        onChange={handleSelectAll}
+                    />
                     {passCategories.map((pass, index) => (
                         <Form.Check
                             key={index}
-                            type="radio"
+                            type="checkbox"
                             label={pass}
-                            checked={selectedPass === pass}
+                            checked={selectedPasses.includes(pass)}
                             onChange={() => handlePassChange(pass)}
                         />
                     ))}
