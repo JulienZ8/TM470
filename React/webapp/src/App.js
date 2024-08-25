@@ -7,8 +7,8 @@ import SeasonEntriesChartGrouped from './components/SeasonEntriesChartGrouped';
 import ReferenceSeasonSelector from './components/ReferenceSeasonSelector';
 import ComparisonLineChart from './components/ComparisonLineChart';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Card from 'react-bootstrap/Card';
-import api from './api';
+import Container from 'react-bootstrap/Container';
+import './App.css';  // Import your CSS file
 
 function App() {
     const [selectedPeriods, setSelectedPeriods] = useState([]);
@@ -51,19 +51,29 @@ function App() {
                 <PassSelector onPassChange={handlePassChange} />
                 <ReferenceSeasonSelector onReferenceSeasonChange={handleReferenceSeasonChange} />
             </div>
-            <div style={{ flex: 1 }}>
-                <SeasonEntriesChartGrouped
-                    selectedPeriods={selectedPeriods}
-                    selectedSeasonNames={selectedSeasonNames}
-                    selectedEteHiver={selectedSeasons}
-                    selectedPass={selectedPass}
-                    onFilteredDataChange={handleFilteredDataChange}  // Pass filtered data up to the parent
-                />
-                <ComparisonLineChart
-                    filteredData={filteredData}  // Use the filtered data
-                    referenceSeason={referenceSeason}
-                />
-            </div>
+            <Container fluid>
+            
+            
+            <div className="chart-container"> 
+                    
+                        <SeasonEntriesChartGrouped
+                            selectedPeriods={selectedPeriods}
+                            selectedSeasonNames={selectedSeasonNames}
+                            selectedEteHiver={selectedSeasons}
+                            selectedPass={selectedPass}
+                            onFilteredDataChange={handleFilteredDataChange}  // Pass filtered data up to the parent
+                        />
+            </div>  
+            
+            <div className="chart-container">     
+                    <ComparisonLineChart
+                        filteredData={filteredData}  // Use the filtered data
+                        referenceSeason={referenceSeason}
+                    />
+            </div>    
+            
+            </Container>
+            
         </div>
     );
 }

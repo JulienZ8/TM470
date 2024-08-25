@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Dropdown, FormCheck } from 'react-bootstrap';
+import Accordion from 'react-bootstrap/Accordion';
+import Form from 'react-bootstrap/Form';
 import api from '../api';
 
 function ReferenceSeasonSelector({ selectedReferenceSeason, onReferenceSeasonChange }) {
@@ -10,8 +11,9 @@ function ReferenceSeasonSelector({ selectedReferenceSeason, onReferenceSeasonCha
         // Fetch seasons from the API
         api.get('/seasonnamelist/')
             .then(response => {
-                setSeasons(response.data);
-                if (response.data.length > 0 && !selectedReferenceSeason) {
+                const sortedSeasons = response.data.sort(); // Sort seasons chronologically
+                setSeasons(sortedSeasons);
+                if (sortedSeasons.length > 0 && !selectedReferenceSeason) {
                     const defaultSeason = response.data[0];
                     setLocalSelectedSeason(defaultSeason);
                     onReferenceSeasonChange(defaultSeason); // Set the first season as default
@@ -28,27 +30,23 @@ function ReferenceSeasonSelector({ selectedReferenceSeason, onReferenceSeasonCha
     };
 
     return (
-        <Dropdown className="d-inline mx-2" autoClose="outside">
-            <Dropdown.Toggle id="dropdown-autoclose-outside">
-                Saison référence
-            </Dropdown.Toggle>
-            <Dropdown.Menu>
-                {seasons.map((season, index) => (
-                    <Dropdown.Item
-                        as="button"
-                        key={index}
-                        onClick={() => handleSeasonChange(season)}
-                    >
-                        <FormCheck
+        <Accordion>
+            <Accordion.Item eventKey="1">
+                <Accordion.Header>Saison référence</Accordion.Header>
+                <Accordion.Body>
+                    {/* Loop over the sorted seasons to create a radio button for each */}
+                    {seasons.map((season, index) => (
+                        <Form.Check
+                            key={index}
                             type="radio"
                             label={season}
                             checked={localSelectedSeason === season}
                             onChange={() => handleSeasonChange(season)}
                         />
-                    </Dropdown.Item>
-                ))}
-            </Dropdown.Menu>
-        </Dropdown>
+                    ))}
+                </Accordion.Body>
+            </Accordion.Item>
+        </Accordion>
     );
 }
 

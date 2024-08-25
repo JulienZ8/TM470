@@ -1,8 +1,9 @@
 import React, { useMemo } from 'react';
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend, ChartDataLabels);
 
 function ComparisonLineChart({ filteredData, referenceSeason }) {
     const comparisonData = useMemo(() => {
@@ -47,7 +48,7 @@ function ComparisonLineChart({ filteredData, referenceSeason }) {
         ],
     };
 
-    const options = {
+    const options = {    
         scales: {
             y: {
                 beginAtZero: true,
@@ -62,6 +63,15 @@ function ComparisonLineChart({ filteredData, referenceSeason }) {
                 ticks: {
                     autoSkip: false,  // Ensures that all seasons are displayed
                 },
+            },
+        },
+        plugins: {
+            datalabels: {
+                display: true,  // Show data labels
+                color: 'black',  // Label color
+                align: 'top',  // Align labels on top of the points
+                anchor: 'end',  // Anchor the labels to the end of the point
+                formatter: (value) => `${Math.round(value)}%`,  // Format percentage to 2 decimal places
             },
         },
     };

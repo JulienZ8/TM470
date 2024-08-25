@@ -75,7 +75,8 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
 
     const options = {
         responsive: true,  // Enable responsiveness
-        maintainAspectRatio: true,  // Disable maintaining the aspect ratio
+        aspectRatio: 3,
+        maintainAspectRatio: false,  // Disable maintaining the aspect ratio
         scales: {
             x: { stacked: true },
             y: { stacked: true, beginAtZero: true },
@@ -104,9 +105,10 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
     };
 
     return (
-        <div>
+        <div className="chart-container">
             <h2>Premières entrées</h2>
             {error ? <p>{error}</p> : <Bar data={chartData} options={options} />}
+
         </div>
     );
 }
