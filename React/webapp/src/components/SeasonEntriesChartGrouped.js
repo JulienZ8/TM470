@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import api from '../api';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
 function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames = [], selectedEteHiver = [], selectedPasses = [], onFilteredDataChange }) {
     const [seasonEntries, setSeasonEntries] = useState([]);
@@ -77,8 +78,21 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
         aspectRatio: 3,
         maintainAspectRatio: false,
         scales: {
-            x: { stacked: true },
-            y: { stacked: true, beginAtZero: true },
+            x: {
+                stacked: true,
+                grid: {
+                    display: false, // Hide grid lines on the x-axis
+                },
+
+            },
+            y: {
+                stacked: true,
+                beginAtZero: true,
+                grid: {
+                    display: false, // Hide grid lines on the y-axis
+                },
+
+            },
         },
         plugins: {
             tooltip: {
@@ -99,6 +113,50 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
                     },
                 },
             },
+            datalabels: {
+                display: function(context) {
+                    const dataset = context.dataset;
+                    const value = dataset.data[context.dataIndex];
+                    const yAxis = context.chart.scales.y;
+                    
+                    // Calculate the bar height
+                    const barHeight = Math.abs(yAxis.getPixelForValue(0) - yAxis.getPixelForValue(value));
+            
+                    // Minimum height threshold for displaying text within the stack
+                    const minBarHeight = 20; // Adjust this value as needed
+            
+                    // Always display total at the top, and individual values if bar is tall enough
+                    return context.datasetIndex === context.chart.data.datasets.length - 1 || barHeight > minBarHeight;
+                },
+                align: function(context) {
+                    // Align totals at the end (top of the stack) and individual values in the center
+                    return context.datasetIndex === context.chart.data.datasets.length - 1 ? 'end' : 'center';
+                },
+                anchor: function(context) {
+                    // Anchor totals at the end and individual values in the center
+                    return context.datasetIndex === context.chart.data.datasets.length - 1 ? 'end' : 'center';
+                },
+                formatter: (value, context) => {
+                    if (context.datasetIndex === context.chart.data.datasets.length - 1) {
+                        // Calculate the stack total for the top stack
+                        const stackTotal = context.chart.data.datasets.reduce((total, dataset) => {
+                            return total + dataset.data[context.dataIndex];
+                        }, 0);
+                        return stackTotal; // Display the stack total at the top of the stack
+                    } else {
+                        // Display the individual stack total within the bar
+                        return value;
+                    }
+                },
+                font: function(context) {
+                    // Bold font for totals, normal for individual values
+                    return {
+                        weight: context.datasetIndex === context.chart.data.datasets.length - 1 ? 'bold' : 'normal',
+                        size: 12,
+                    };
+                },
+                color: '#000',  // Text color
+            }
         },
     };
 

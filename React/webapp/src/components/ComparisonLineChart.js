@@ -59,10 +59,10 @@ function ComparisonLineChart({ filteredData, referenceSeason }) {
                 },
             },
             x: {
-                beginAtZero: true,
-                ticks: {
-                    autoSkip: false,  // Ensures that all seasons are displayed
-                },
+                beginAtZero: false,
+                offset: true,  // Add offset to the x-axis
+
+                
             },
         },
         plugins: {
