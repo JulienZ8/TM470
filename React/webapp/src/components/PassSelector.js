@@ -43,7 +43,7 @@ function PassSelector({ onPassChange }) {
     };
 
     return (
-        <Accordion>
+        <Accordion className="shadow-sm">
             <Accordion.Item eventKey="0">
                 <Accordion.Header>Catégorie de forfait</Accordion.Header>
                 <Accordion.Body>

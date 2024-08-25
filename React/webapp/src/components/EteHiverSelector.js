@@ -39,7 +39,7 @@ function EteHiverSelector({ selectedEteHiver, onSeasonChange }) {
     };
 
     return (
-        <Accordion>
+        <Accordion className="shadow-sm">
             <Accordion.Item eventKey="0">
                 <Accordion.Header>Été/hiver</Accordion.Header>
                 <Accordion.Body>

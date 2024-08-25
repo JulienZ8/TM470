@@ -11,6 +11,7 @@ import Container from 'react-bootstrap/Container';
 import './App.css';  // Import your CSS file
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import gypaeteImage from './images/gypaete.png';
 
 function App() {
     const [selectedPeriods, setSelectedPeriods] = useState([]);
@@ -48,6 +49,7 @@ function App() {
         <Container fluid>
             <Row className="py-3">
                 <Col className="menu">
+                    <img src={gypaeteImage} alt="Menu Header" style={{ width: '100%', marginBottom: '20px' }} />
                     <PeriodSelector onPeriodChange={handlePeriodChange} />
                     <SeasonNameSelector onSeasonChange={handleSeasonNameChange} />
                     <EteHiverSelector onSeasonChange={handleSeasonChange} />

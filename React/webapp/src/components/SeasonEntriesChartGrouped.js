@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, Labels } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import Card from 'react-bootstrap/Card';
 import api from '../api';
@@ -157,13 +157,19 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
                     };
                 },
                 color: '#000',  // Text color
-            }
+            },
+            legend: {
+                labels: {
+                    usePointStyle: true, // Use the pointStyle property
+                    pointStyle: 'circle', // Set the point style to circle
+                },
+            },
         },
     };
 
     return (
         
-        <Card>
+        <Card className="shadow-sm">
             <Card.Header as="h5">Premières entrées</Card.Header>
             <Card.Body>
                 <div className="chart-container">

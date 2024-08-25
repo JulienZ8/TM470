@@ -42,7 +42,7 @@ function PeriodSelector({ onPeriodChange }) {
 
     return (
 
-        <Accordion>
+        <Accordion className="shadow-sm">
             <Accordion.Item eventKey="0">
                 <Accordion.Header>Période</Accordion.Header>
                     <Accordion.Body>

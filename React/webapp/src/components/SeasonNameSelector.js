@@ -39,7 +39,7 @@ function SeasonNameSelector({ onSeasonChange }) {
     };
 
     return (
-        <Accordion >
+        <Accordion className="shadow-sm">
             <Accordion.Item eventKey="0">
                 <Accordion.Header>Saison</Accordion.Header>
                 <Accordion.Body>

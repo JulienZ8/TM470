@@ -29,7 +29,7 @@ function ReferenceSeasonSelector({ selectedReferenceSeason, onReferenceSeasonCha
     };
 
     return (
-        <Accordion>
+        <Accordion className="shadow-sm">
             <Accordion.Item eventKey="1">
                 <Accordion.Header>Saison référence</Accordion.Header>
                 <Accordion.Body>

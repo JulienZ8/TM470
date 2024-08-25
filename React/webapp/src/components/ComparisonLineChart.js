@@ -65,6 +65,9 @@ function ComparisonLineChart({ filteredData, referenceSeason }) {
             x: {
                 beginAtZero: false,
                 offset: true,  // Add offset to the x-axis
+                grid: {
+                    display: false, // Remove vertical grid lines
+                },
             },
         },
         plugins: {
@@ -75,12 +78,18 @@ function ComparisonLineChart({ filteredData, referenceSeason }) {
                 anchor: 'end',  // Anchor the labels to the end of the point
                 formatter: (value) => `${Math.round(value)}%`,  // Format percentage to 2 decimal places
             },
+            legend: {
+                labels: {
+                    usePointStyle: true, // Use the pointStyle property
+                    pointStyle: 'circle', // Set the point style to circle
+                },
+            },
         },
     };
 
     return (
 
-        <Card>
+        <Card className="shadow-sm">
             <Card.Header as="h5">Comparaison avec la saison de référence</Card.Header>
             <Card.Body>
                 <div className="chart-container">
