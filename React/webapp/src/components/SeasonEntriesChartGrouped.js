@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import Card from 'react-bootstrap/Card';
 import api from '../api';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
@@ -161,10 +162,16 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
     };
 
     return (
-        <div className="chart-container">
-            <h2>Premières entrées</h2>
-            {error ? <p>{error}</p> : <Bar data={chartData} options={options} />}
-        </div>
+        
+        <Card>
+            <Card.Header as="h5">Premières entrées</Card.Header>
+            <Card.Body>
+                <div className="chart-container">
+                {error ? <p>{error}</p> : <Bar data={chartData} options={options} />}
+                </div>
+            </Card.Body>
+        </Card>
+        
     );
 }
 

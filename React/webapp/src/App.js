@@ -9,6 +9,8 @@ import ComparisonLineChart from './components/ComparisonLineChart';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Container from 'react-bootstrap/Container';
 import './App.css';  // Import your CSS file
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 function App() {
     const [selectedPeriods, setSelectedPeriods] = useState([]);
@@ -43,19 +45,17 @@ function App() {
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'row', padding: '20px' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', marginRight: '20px', minWidth: '200px'}}>
-                <PeriodSelector onPeriodChange={handlePeriodChange} />
-                <SeasonNameSelector onSeasonChange={handleSeasonNameChange} />
-                <EteHiverSelector onSeasonChange={handleSeasonChange} />
-                <PassSelector onPassChange={handlePassChange} />
-                <ReferenceSeasonSelector onReferenceSeasonChange={handleReferenceSeasonChange} />
-            </div>
-            <Container fluid>
-            
-            
-            <div className="chart-container"> 
-                    
+        <Container fluid>
+            <Row className="py-3">
+                <Col className="menu">
+                    <PeriodSelector onPeriodChange={handlePeriodChange} />
+                    <SeasonNameSelector onSeasonChange={handleSeasonNameChange} />
+                    <EteHiverSelector onSeasonChange={handleSeasonChange} />
+                    <PassSelector onPassChange={handlePassChange} />
+                    <ReferenceSeasonSelector onReferenceSeasonChange={handleReferenceSeasonChange} />
+                </Col>
+                <Col md={9}>
+                    <div style={{ marginBottom: '20px' }}>
                         <SeasonEntriesChartGrouped
                             selectedPeriods={selectedPeriods}
                             selectedSeasonNames={selectedSeasonNames}
@@ -63,18 +63,16 @@ function App() {
                             selectedPasses={selectedPasses}
                             onFilteredDataChange={handleFilteredDataChange}  // Pass filtered data up to the parent
                         />
-            </div>  
-            
-            <div className="chart-container">     
-                    <ComparisonLineChart
-                        filteredData={filteredData}  // Use the filtered data
-                        referenceSeason={referenceSeason}
-                    />
-            </div>    
-            
-            </Container>
-            
-        </div>
+                    </div>  
+                    <div >
+                        <ComparisonLineChart
+                            filteredData={filteredData}  // Use the filtered data
+                            referenceSeason={referenceSeason}
+                        />
+                    </div>    
+                </Col>
+            </Row>
+        </Container>
     );
 }
 

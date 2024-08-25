@@ -21,18 +21,14 @@ function PassSelector({ onPassChange }) {
     }, []);
 
     const handlePassChange = (pass) => {
-        let newSelectedPasses = [];
-
-        if (pass === 'Non-classifié') {
-            newSelectedPasses = selectedPasses.includes(pass) ? [] : ['Non-classifié'];
-        } else {
-            newSelectedPasses = selectedPasses.includes(pass)
-                ? selectedPasses.filter(p => p !== pass)
-                : [...selectedPasses.filter(p => p !== 'Non-classifié'), pass];
-        }
+        // Toggle selection of the pass
+        const newSelectedPasses = selectedPasses.includes(pass)
+            ? selectedPasses.filter(p => p !== pass)
+            : [...selectedPasses, pass];
 
         setSelectedPasses(newSelectedPasses);
-        onPassChange(newSelectedPasses.map(p => p === 'Non-classifié' ? null : p)); // Map "Non-classifié" to null
+        // Map "Non-classifié" to null for backend processing
+        onPassChange(newSelectedPasses.map(p => p === 'Non-classifié' ? null : p));
     };
 
     const handleSelectAll = () => {
@@ -41,7 +37,8 @@ function PassSelector({ onPassChange }) {
             onPassChange([]);
         } else {
             setSelectedPasses(passCategories);
-            onPassChange(passCategories.map(pass => pass === 'Non-classifié' ? null : pass)); // Map "Non-classifié" to null
+            // Handle null value for "Non-classifié" and pass it as null
+            onPassChange(passCategories.map(pass => pass === 'Non-classifié' ? null : pass));
         }
     };
 
