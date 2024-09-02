@@ -6,3 +6,27 @@ venv/
 
 
 __pycache__/
+
+# Node.js (React)
+node_modules/
+build/
+dist/
+.env
+
+# Database
+*.sqlite3
+*.db
+
+# Logs
+*.log
+
+# IDE/Editor
+.vscode/
+.idea/
+*.swp
+.history/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
