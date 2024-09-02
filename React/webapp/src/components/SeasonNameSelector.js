@@ -66,4 +66,3 @@ function SeasonNameSelector({ onSeasonChange }) {
 }
 
 export default SeasonNameSelector;
-

@@ -102,5 +102,3 @@ function ComparisonLineChart({ filteredData, referenceSeason }) {
 }
 
 export default ComparisonLineChart;
-
-

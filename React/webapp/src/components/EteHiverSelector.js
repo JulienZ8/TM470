@@ -66,4 +66,3 @@ function EteHiverSelector({ selectedEteHiver, onSeasonChange }) {
 }
 
 export default EteHiverSelector;
-

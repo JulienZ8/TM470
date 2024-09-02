@@ -4,8 +4,6 @@ from sqlalchemy.orm import relationship
 
 from .database import Base
 
-
-
 class DimCalendar(Base):
     __tablename__ = 'dim_calendar'
     
