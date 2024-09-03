@@ -10,10 +10,10 @@ function PassSelector({ onPassChange }) {
     useEffect(() => {
         api.get('/passlist/')
             .then(response => {
-                const fetchedPasses = ['Non-classifié', ...response.data]; // Add "Non-classifié" to the list
+                const fetchedPasses = ['Non-classifié', ...response.data]; //Add "Non-classifié" to the list
                 setPassCategories(fetchedPasses);
-                setSelectedPasses(fetchedPasses); // Select all by default
-                onPassChange(fetchedPasses.map(pass => pass === 'Non-classifié' ? null : pass)); // Map "Non-classifié" to null
+                setSelectedPasses(fetchedPasses); //Select all by default
+                onPassChange(fetchedPasses); //Pass all selected passes (including "Non-classifié")
             })
             .catch(error => {
                 console.error('Error fetching pass categories', error);
@@ -27,8 +27,7 @@ function PassSelector({ onPassChange }) {
             : [...selectedPasses, pass];
 
         setSelectedPasses(newSelectedPasses);
-        // Map "Non-classifié" to null for backend processing
-        onPassChange(newSelectedPasses.map(p => p === 'Non-classifié' ? null : p));
+        onPassChange(newSelectedPasses); //Pass selected passes to parent
     };
 
     const handleSelectAll = () => {
@@ -37,8 +36,7 @@ function PassSelector({ onPassChange }) {
             onPassChange([]);
         } else {
             setSelectedPasses(passCategories);
-            // Handle null value for "Non-classifié" and pass it as null
-            onPassChange(passCategories.map(pass => pass === 'Non-classifié' ? null : pass));
+            onPassChange(passCategories);
         }
     };
 

@@ -3,52 +3,57 @@ import api from '../api';
 import Accordion from 'react-bootstrap/Accordion';
 import Form from 'react-bootstrap/Form';
 
-function EteHiverSelector({ selectedEteHiver, onSeasonChange }) {
-    const [seasons, setSeasons] = useState([]);
-    const [localSelectedSeasons, setLocalSelectedSeasons] = useState(selectedEteHiver || []);
+function EteHiverSelector({ onSeasonChange }) {
+    const [seasons, setSeasons] = useState([]); //State to hold the list of seasons fetched from the API
+    const [localSelectedSeasons, setLocalSelectedSeasons] = useState([]); //State to hold the currently selected seasons
 
+    //Fetch the list of seasons from the API when the component mounts
     useEffect(() => {
         api.get('/seasonlist/')
             .then(response => {
-                setSeasons(response.data);
-                setLocalSelectedSeasons(response.data); // Select all by default
+                const fetchedSeasons = response.data;
+                setSeasons(fetchedSeasons); //Store fetched seasons in state
+                setLocalSelectedSeasons(fetchedSeasons); //Select all seasons by default
+                onSeasonChange(fetchedSeasons); // Notify parent component with initial selection
             })
             .catch(error => {
-                console.error('Error fetching seasons', error);
+                console.error('Error fetching seasons', error); //Handle any errors
             });
-    }, []);
+    }, []); //Empty dependency array ensures this effect runs only once
 
-    useEffect(() => {
-        onSeasonChange(localSelectedSeasons);
-    }, [localSelectedSeasons, onSeasonChange]);
-
+    //Handle the selection/deselection of a single season
     const handleSeasonChange = (season) => {
-        if (localSelectedSeasons.includes(season)) {
-            setLocalSelectedSeasons(localSelectedSeasons.filter(s => s !== season));
-        } else {
-            setLocalSelectedSeasons([...localSelectedSeasons, season]);
-        }
+        const newSelectedSeasons = localSelectedSeasons.includes(season)
+            ? localSelectedSeasons.filter(s => s !== season)
+            : [...localSelectedSeasons, season];
+        setLocalSelectedSeasons(newSelectedSeasons);
+        onSeasonChange(newSelectedSeasons);
     };
 
+    //Handle the "Select All" or "Deselect All" functionality
     const handleSelectAll = () => {
-        if (localSelectedSeasons.length === seasons.length) {
+        if (localSelectedSeasons.length === seasons.length) { //If all seasons are selected, deselect all
             setLocalSelectedSeasons([]);
-        } else {
+            onSeasonChange([]);
+        } else { //Otherwise, select all seasons
             setLocalSelectedSeasons(seasons);
+            onSeasonChange(seasons);
         }
     };
 
     return (
-        <Accordion className="shadow-sm">
-            <Accordion.Item eventKey="0">
+        <Accordion className="shadow-sm"> {/* Accordion with a shadow */}
+            <Accordion.Item eventKey="0"> {/* Single Accordion item */}
                 <Accordion.Header>Été/hiver</Accordion.Header>
                 <Accordion.Body>
-                    <Form.Check
+                    {/* Select All / Deselect all checkbox */}
+                    <Form.Check 
                         type="checkbox"
                         label={localSelectedSeasons.length === seasons.length ? "Deselect All" : "Select All"}
                         checked={localSelectedSeasons.length === seasons.length}
                         onChange={handleSelectAll}
                     />
+                    {/* Ete/Hiver checkboxes */}
                     {seasons.map((season, index) => (
                         <Form.Check
                             key={index}
