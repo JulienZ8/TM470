@@ -28,3 +28,23 @@ def get_season_entries_grouped(db: Session):
     )
 
     return result if result else []
+
+# Retrieve distinct periods from the DimCalendar table
+def get_periods(db: Session):
+    periods = db.query(models.DimCalendar.period_default).distinct().all()
+    return [period.period_default for period in periods]
+
+# Retrieve distinct season names from the DimCalendar table
+def get_season_names(db: Session):
+    season_names = db.query(models.DimCalendar.season_name).distinct().all()
+    return [season_name.season_name for season_name in season_names]
+
+# Retrieve distinct seasons (e.g., 'ete', 'hiver') from the DimCalendar table
+def get_seasons(db: Session):
+    seasons = db.query(models.DimCalendar.season).distinct().all()
+    return [season.season for season in seasons]
+
+# Retrieve distinct pass categories from the DimPassCategory table
+def get_pass_list(db: Session):
+    pass_categories = db.query(models.DimPassCategory.main).distinct().all()
+    return [category.main for category in pass_categories]

@@ -1,11 +1,10 @@
-from fastapi import FastAPI, Depends, Query, HTTPException
-from sqlalchemy.orm import Session, joinedload
+from fastapi import FastAPI, Depends
+from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import func
 
 from . import crud, models, schemas
 from .database import SessionLocal, engine
-from typing import List, Optional
+from typing import List
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -22,7 +21,7 @@ def get_db():
 # Set up CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # URLs of the frontends you want to allow to connect
+    allow_origins=["http://localhost:3000"],  # URL of React
     allow_credentials=True,
     allow_methods=["*"],  # Allow all methods
     allow_headers=["*"],  # Allow all headers
@@ -34,20 +33,16 @@ def read_season_entries_grouped(db: Session = Depends(get_db)):
 
 @app.get("/periodlist/", response_model=List[str])
 def get_periods(db: Session = Depends(get_db)):
-    periods = db.query(models.DimCalendar.period_default).distinct().all()
-    return [period.period_default for period in periods]
+    return crud.get_periods(db)  # Call the function from crud.py
 
 @app.get("/seasonnamelist/", response_model=List[str])
 def get_season_names(db: Session = Depends(get_db)):
-    season_names = db.query(models.DimCalendar.season_name).distinct().all()
-    return [season_name.season_name for season_name in season_names]
+    return crud.get_season_names(db)  # Call the function from crud.py
 
 @app.get("/seasonlist/", response_model=List[str])
-def get_season_names(db: Session = Depends(get_db)):
-    seasons = db.query(models.DimCalendar.season).distinct().all()
-    return [season.season for season in seasons]
+def get_seasons(db: Session = Depends(get_db)):
+    return crud.get_seasons(db)  # Call the function from crud.py
 
 @app.get("/passlist/", response_model=List[str])
 def get_pass_list(db: Session = Depends(get_db)):
-    pass_categories = db.query(models.DimPassCategory.main).distinct().all()
-    return [category.main for category in pass_categories]
+    return crud.get_pass_list(db)  # Call the function from crud.py
