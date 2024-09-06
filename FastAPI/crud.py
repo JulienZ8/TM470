@@ -12,18 +12,20 @@ def get_season_entries_grouped(db: Session):
             models.DimCalendar.period_default,
             models.DimCalendar.season,
             models.DimPassCategory.main.label("pass_category"),
-            func.count(models.FactEntry.entry_date).label("entry_count"),  #Counts the entries for each period within the season
+            func.count(models.FactEntry.entry_date).label("entry_count"),  #Counts the entries in this group
         )
         .join(models.DimCalendar.fact_entries)  #Joins DimCalendar with FactEntry to get the entries per period
         .outerjoin(models.DimPassCategory, models.FactEntry.dim_pass_category_id == models.DimPassCategory.id)
 
+        #Groups the results by season_name, period_default, total_entries 
+        #and main(pass category) to aggregate the data correctly
         .group_by(models.DimCalendar.season_name, 
                   models.DimCalendar.period_default, 
                   models.DimCalendar.season,
                   models.DimPassCategory.main)
-        #Groups the results by season_name, period_default, and total_entries to aggregate the data correctly
 
-        .order_by(models.DimCalendar.season_name)  #Orders the results by season_name to ensure a chronological sequence in the output
+        #Orders the results by season_name to ensure a chronological sequence in the output
+        .order_by(models.DimCalendar.season_name)  
         .all() 
     )
 
@@ -31,7 +33,9 @@ def get_season_entries_grouped(db: Session):
 
 # Retrieve distinct periods from the DimCalendar table
 def get_periods(db: Session):
+    # Query distinct periods
     periods = db.query(models.DimCalendar.period_default).distinct().all()
+    # Convert query result to a list
     return [period.period_default for period in periods]
 
 # Retrieve distinct season names from the DimCalendar table

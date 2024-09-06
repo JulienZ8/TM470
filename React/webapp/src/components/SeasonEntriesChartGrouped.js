@@ -7,7 +7,13 @@ import api from '../api';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
-function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames = [], selectedEteHiver = [], selectedPasses = [], onFilteredDataChange }) {
+function SeasonEntriesChartGrouped({ 
+    selectedPeriods = [], 
+    selectedSeasonNames = [], 
+    selectedEteHiver = [], 
+    selectedPasses = [], 
+    onFilteredDataChange 
+}) {
     const [seasonEntries, setSeasonEntries] = useState([]); //State to hold the data fetched from the API
     const [error, setError] = useState(null); //State to handle any errors during data fetching
     const [colorMap, setColorMap] = useState({}); //State to manage the color mapping for different periods
@@ -23,8 +29,8 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
             });
     }, []);
 
-    
-    const filteredSeasonEntries = useMemo(() => { //useMemo to memoize the filtered season entries, recalculating only when dependencies change   
+    //useMemo to memoize the filtered season entries, recalculating only when dependencies change
+    const filteredSeasonEntries = useMemo(() => {   
         const filtered = seasonEntries.filter(entry => 
             selectedPeriods.includes(entry.period_default) &&
             selectedSeasonNames.includes(entry.season_name) &&
@@ -48,18 +54,19 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
             const period = entry.period_default;
             const entryCount = entry.entry_count;
             
-            if (!groupedData[season]) { //Group data by season and period
+            if (!groupedData[season]) { //Initialize if season doesn't exist in groupedData
                 groupedData[season] = {};
             }
 
-            groupedData[season][period] = (groupedData[season][period] || 0) + entryCount; //Sum entry counts for each period within a season
+            // Group entries by season and period, summing counts for the same season and period
+            groupedData[season][period] = (groupedData[season][period] || 0) + entryCount;
 
             if (!newColorMap[period]) { //Assign a color to each period if not already assigned
                 newColorMap[period] = getRandomColor();
             }
         });
-
-        setColorMap(newColorMap); //Update the color map state
+        //console.log("Updated Color Map:", newColorMap);
+        setColorMap(newColorMap); //Store color mapping for future rendering
 
         const seasons = Object.keys(groupedData); //Extract season names and prepare datasets for the chart
         const datasets = selectedPeriods.map(period => ({
@@ -121,9 +128,7 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
                     const dataset = context.dataset;
                     const value = dataset.data[context.dataIndex];
                     const yAxis = context.chart.scales.y;
-                    
-                    const barHeight = Math.abs(yAxis.getPixelForValue(0) - yAxis.getPixelForValue(value)); //Calculate the bar height
-            
+                    const barHeight = Math.abs(yAxis.getPixelForValue(0) - yAxis.getPixelForValue(value)); //Calculate the bar height           
                     const minBarHeight = 20; //Minimum height threshold for displaying text within the stack
             
                     //Always display total at the top, and individual values if bar is tall enough
@@ -165,7 +170,6 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
     };
 
     return (
-        
         <Card className="shadow-sm"> {/* Bootstrap Card component with a shadow */}
             <Card.Header as="h5">Premières entrées</Card.Header>
             <Card.Body>
@@ -173,8 +177,7 @@ function SeasonEntriesChartGrouped({ selectedPeriods = [], selectedSeasonNames =
                 {error ? <p>{error}</p> : <Bar data={chartData} options={options} />}
                 </div>
             </Card.Body>
-        </Card>
-        
+        </Card>    
     );
 }
 
