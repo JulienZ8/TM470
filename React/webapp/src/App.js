@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PeriodSelector from './components/PeriodSelector';
 import SeasonNameSelector from './components/SeasonNameSelector';
 import EteHiverSelector from './components/EteHiverSelector';
@@ -21,30 +21,30 @@ function App() { //State variables to hold the selected filter options and the f
     const [referenceSeason, setReferenceSeason] = useState("");
     const [filteredData, setFilteredData] = useState([]);  //State to hold the filtered data
 
-    //Handlers to update state based on the selected options
-    const handlePeriodChange = (periods) => { 
+    //Memoized handlers using useCallback to prevent unnecessary re-renders
+    const handlePeriodChange = useCallback((periods) => {
         setSelectedPeriods(periods); //Update selected periods
-    };
+    }, []); //Empty dependency array ensures it only changes when needed
 
-    const handleSeasonNameChange = (seasonNames) => {
+    const handleSeasonNameChange = useCallback((seasonNames) => {
         setSelectedSeasonNames(seasonNames); //Update selected season names (2019-2020, 2021-2022, etc..)
-    };
+    }, []);
 
-    const handleSeasonChange = (seasons) => {
+    const handleSeasonChange = useCallback((seasons) => {
         setSelectedSeasons(seasons); //Update selected seasons (été/hiver)
-    };
+    }, []);
 
-    const handlePassChange = (pass) => {
-        setSelectedPass(pass); //Update select pass categories
-    };
+    const handlePassChange = useCallback((pass) => {
+        setSelectedPass(pass); //Update selected pass categories
+    }, []);
 
-    const handleReferenceSeasonChange = (season) => {
+    const handleReferenceSeasonChange = useCallback((season) => {
         setReferenceSeason(season); //Update the selected reference season
-    };
+    }, []);
 
-    const handleFilteredDataChange = (filtered) => {
-        setFilteredData(filtered);  // Update the filtered data state
-    };
+    const handleFilteredDataChange = useCallback((filtered) => {
+        setFilteredData(filtered);  //Update the filtered data state
+    }, []);
 
     return (
         <Container fluid>
@@ -69,7 +69,7 @@ function App() { //State variables to hold the selected filter options and the f
                             onFilteredDataChange={handleFilteredDataChange}  //Pass filtered data up to the parent
                         />
                     </div>  
-                    <div >
+                    <div>
                         {/* Render the ComparisonLineChart, passing the filtered data and reference season as props */}
                         <ComparisonLineChart
                             filteredData={filteredData}  //Pass the filtered data to the chart

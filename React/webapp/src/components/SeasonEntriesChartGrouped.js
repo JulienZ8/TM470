@@ -14,94 +14,103 @@ function SeasonEntriesChartGrouped({
     selectedPasses = [], 
     onFilteredDataChange 
 }) {
-    const [seasonEntries, setSeasonEntries] = useState([]); //State to hold the data fetched from the API
-    const [error, setError] = useState(null); //State to handle any errors during data fetching
-    const [colorMap, setColorMap] = useState({}); //State to manage the color mapping for different periods
+    const [seasonEntries, setSeasonEntries] = useState([]); //Holds fetched data
+    const [error, setError] = useState(null); //Handles errors during fetching
+    const [colorMap, setColorMap] = useState({}); //Manages color mapping for periods
+    const [filteredEntries, setFilteredEntries] = useState([]); //Store filtered data in local state
 
     useEffect(() => { //useEffect to fetch data from the API when the component mounts
         api.get('/season-entries-grouped/')
             .then(response => {
                 setSeasonEntries(response.data); //Store the fetched data in state
+                console.log("Season Entries Fetched:", response.data);
             })
             .catch(error => {
                 console.error('Error fetching season entries', error);
                 setError('Failed to load data'); // Set error state if there's a problem fetching data
             });
-    }, []);
+    }, []); //Empty dependency array ensures this only runs once when the component mounts
 
-    //useMemo to memoize the filtered season entries, recalculating only when dependencies change
-    const filteredSeasonEntries = useMemo(() => {   
-        const filtered = seasonEntries.filter(entry => 
+    const filteredSeasonEntries = useMemo(() => { //useMemo to filter the season entries
+        const filtered = seasonEntries.filter(entry =>
             selectedPeriods.includes(entry.period_default) &&
             selectedSeasonNames.includes(entry.season_name) &&
             selectedEteHiver.includes(entry.season) &&
             (selectedPasses.includes(entry.pass_category) || 
              (entry.pass_category === null && selectedPasses.includes('Non-classifié')))
         );
-    
-        console.log("Filtered Entries:", filtered); 
-        onFilteredDataChange(filtered);  // Pass the filtered data up to the parent component
-    
-        return filtered;
+ 
+        return filtered; //Return filtered data for rendering purposes
     }, [seasonEntries, selectedPeriods, selectedSeasonNames, selectedEteHiver, selectedPasses]);
 
-    const chartData = useMemo(() => { //useMemo to prepare data for the chart based on filtered entries
+    useEffect(() => { //Trigger onFilteredDataChange from useEffect, not during render
+        if (filteredEntries.length !== filteredSeasonEntries.length) {
+            setFilteredEntries(filteredSeasonEntries);  //Update local filtered entries
+            onFilteredDataChange(filteredSeasonEntries); //Pass filtered data to parent component
+        }
+    }, [filteredSeasonEntries, onFilteredDataChange, filteredEntries]); //Depend on filtered entries
+
+    //Update colorMap in a separate useEffect after data has been fetched and filteredSeasonEntries is available
+    useEffect(() => {
+        const newColorMap = { ...colorMap };
+
+        //Go through filtered season entries and assign colors to periods
+        filteredSeasonEntries.forEach(entry => {
+            const period = entry.period_default;
+            if (!newColorMap[period]) {
+                newColorMap[period] = getRandomColor(); //Assign random color if not already set
+            }
+        });
+
+        //Set the updated color map only if it has changed
+        if (JSON.stringify(newColorMap) !== JSON.stringify(colorMap)) {
+            setColorMap(newColorMap); //Update the state only if necessary
+        }
+    }, [filteredSeasonEntries, colorMap]); //Depend on filtered data and color map
+
+    const chartData = useMemo(() => { //Chart data creation
         const groupedData = {};
-        const newColorMap = { ...colorMap }; //Clone the current color map
 
         filteredSeasonEntries.forEach(entry => {
             const season = entry.season_name;
             const period = entry.period_default;
             const entryCount = entry.entry_count;
-            
-            if (!groupedData[season]) { //Initialize if season doesn't exist in groupedData
+
+            if (!groupedData[season]) {
                 groupedData[season] = {};
             }
 
-            // Group entries by season and period, summing counts for the same season and period
             groupedData[season][period] = (groupedData[season][period] || 0) + entryCount;
-
-            if (!newColorMap[period]) { //Assign a color to each period if not already assigned
-                newColorMap[period] = getRandomColor();
-            }
         });
-        //console.log("Updated Color Map:", newColorMap);
-        setColorMap(newColorMap); //Store color mapping for future rendering
 
-        const seasons = Object.keys(groupedData); //Extract season names and prepare datasets for the chart
+        const seasons = Object.keys(groupedData);
         const datasets = selectedPeriods.map(period => ({
             label: period,
             data: seasons.map(season => groupedData[season][period] || 0),
-            backgroundColor: newColorMap[period],
-            borderColor: newColorMap[period],
+            backgroundColor: colorMap[period],
+            borderColor: colorMap[period],
             borderWidth: 0,
         }));
 
         return {
-            labels: seasons, //X-axis labels (season names)
-            datasets: datasets, //Data for each period
+            labels: seasons,
+            datasets: datasets,
         };
-    }, [filteredSeasonEntries, selectedPeriods]);
+    }, [filteredSeasonEntries, selectedPeriods, colorMap]);
 
-    const options = { // Chart.js options for customization
+    const options = { //Chart options for stacked bar chart
         responsive: true,
         aspectRatio: 3,
         maintainAspectRatio: false,
         scales: {
             x: {
                 stacked: true, //Stack bars on the x-axis
-                grid: {
-                    display: false, //Hide grid lines on the x-axis
-                },
-
+                grid: { display: false },
             },
             y: {
                 stacked: true, //Stack bars on the y-axis
-                beginAtZero: true, //Start y-axis at zero
-                grid: {
-                    display: false, //Hide grid lines on the y-axis
-                },
-
+                beginAtZero: true,
+                grid: { display: false },
             },
         },
         plugins: {
@@ -128,23 +137,20 @@ function SeasonEntriesChartGrouped({
                     const dataset = context.dataset;
                     const value = dataset.data[context.dataIndex];
                     const yAxis = context.chart.scales.y;
-                    const barHeight = Math.abs(yAxis.getPixelForValue(0) - yAxis.getPixelForValue(value)); //Calculate the bar height           
-                    const minBarHeight = 20; //Minimum height threshold for displaying text within the stack
-            
-                    //Always display total at the top, and individual values if bar is tall enough
+                    const barHeight = Math.abs(yAxis.getPixelForValue(0) - yAxis.getPixelForValue(value));
+                    const minBarHeight = 20;
+
                     return context.datasetIndex === context.chart.data.datasets.length - 1 || barHeight > minBarHeight;
                 },
-                align: function(context) {
-                    //Align totals at the end (top of the stack) and individual values in the center
+                align: function (context) { //Align totals at the end (top of the stack) and individual values in the center
                     return context.datasetIndex === context.chart.data.datasets.length - 1 ? 'end' : 'center';
                 },
-                anchor: function(context) {
-                    //Anchor totals at the end and individual values in the center
+                anchor: function (context) { //Anchor totals at the end and individual values in the center
                     return context.datasetIndex === context.chart.data.datasets.length - 1 ? 'end' : 'center';
                 },
                 formatter: (value, context) => {
                     if (context.datasetIndex === context.chart.data.datasets.length - 1) {
-                        const stackTotal = context.chart.data.datasets.reduce((total, dataset) => { //Calculate the stack total for the top stack
+                        const stackTotal = context.chart.data.datasets.reduce((total, dataset) => {
                             return total + dataset.data[context.dataIndex];
                         }, 0);
                         return stackTotal; //Display the stack total at the top of the stack
@@ -174,14 +180,14 @@ function SeasonEntriesChartGrouped({
             <Card.Header as="h5">Premières entrées</Card.Header>
             <Card.Body>
                 <div className="chart-container">
-                {error ? <p>{error}</p> : <Bar data={chartData} options={options} />}
+                    {error ? <p>{error}</p> : <Bar data={chartData} options={options} />}
                 </div>
             </Card.Body>
-        </Card>    
+        </Card>
     );
 }
 
-function getRandomColor() {
+function getRandomColor() { //Function to generate random color for each period
     const letters = '0123456789ABCDEF';
     let color = '#';
     for (let i = 0; i < 6; i++) {
