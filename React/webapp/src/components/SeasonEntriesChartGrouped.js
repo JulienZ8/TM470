@@ -4,6 +4,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import Card from 'react-bootstrap/Card';
 import api from '../api';
+import { useTranslation } from 'react-i18next';  // Import the useTranslation hook
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartDataLabels);
 
@@ -14,6 +15,7 @@ function SeasonEntriesChartGrouped({
     selectedPasses = [], 
     onFilteredDataChange 
 }) {
+    const { t } = useTranslation(); // Initialize the translation function
     const [seasonEntries, setSeasonEntries] = useState([]); //Holds fetched data
     const [error, setError] = useState(null); //Handles errors during fetching
     const [colorMap, setColorMap] = useState({}); //Manages color mapping for periods
@@ -180,7 +182,7 @@ function SeasonEntriesChartGrouped({
 
     return (
         <Card className="shadow-sm"> {/* Bootstrap Card component with a shadow */}
-            <Card.Header as="h5">Premières entrées</Card.Header>
+            <Card.Header as="h5">{t('card.entriesTitle')}</Card.Header>
             <Card.Body>
                 <div className="chart-container">
                     {error ? <p>{error}</p> : <Bar data={chartData} options={options} />}

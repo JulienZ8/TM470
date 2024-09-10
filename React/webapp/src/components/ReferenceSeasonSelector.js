@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Accordion from 'react-bootstrap/Accordion';
 import Form from 'react-bootstrap/Form';
 import api from '../api';
+import { useTranslation } from 'react-i18next';  // Import the useTranslation hook
 
 function ReferenceSeasonSelector({ selectedReferenceSeason, onReferenceSeasonChange }) {
+    const { t } = useTranslation(); // Initialize the translation function
     const [seasons, setSeasons] = useState([]);
     const [localSelectedSeason, setLocalSelectedSeason] = useState(selectedReferenceSeason || "");
 
@@ -31,7 +33,7 @@ function ReferenceSeasonSelector({ selectedReferenceSeason, onReferenceSeasonCha
     return (
         <Accordion className="shadow-sm">
             <Accordion.Item eventKey="1">
-                <Accordion.Header>Saison référence</Accordion.Header>
+                <Accordion.Header>{t('accordion.seasonRef')}</Accordion.Header>
                 <Accordion.Body>
                     {/* Loop over the sorted seasons to create a radio button for each */}
                     {seasons.map((season, index) => (

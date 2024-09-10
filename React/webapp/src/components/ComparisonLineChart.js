@@ -3,10 +3,12 @@ import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend } from 'chart.js';
 import Card from 'react-bootstrap/Card';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { useTranslation } from 'react-i18next';  // Import the useTranslation hook
 
 ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend, ChartDataLabels);
 
 function ComparisonLineChart({ filteredData, referenceSeason }) {
+    const { t } = useTranslation(); // Initialize the translation function
     const comparisonData = useMemo(() => {
         if (!referenceSeason || filteredData.length === 0) {
             return [];
@@ -39,7 +41,7 @@ function ComparisonLineChart({ filteredData, referenceSeason }) {
         labels: comparisonData.map(entry => entry.season_name),  //X-axis labels (seasons)
         datasets: [
             {
-                label: `Comparaison avec ${referenceSeason}`,
+                label: `${t('card.compareWith')}${referenceSeason}`,
                 data: comparisonData.map(entry => entry.percentage),  //Y-axis data (percentage difference)
                 fill: false,
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -90,7 +92,7 @@ function ComparisonLineChart({ filteredData, referenceSeason }) {
     return (
 
         <Card className="shadow-sm">
-            <Card.Header as="h5">Comparaison avec la saison de référence</Card.Header>
+            <Card.Header as="h5">{t('card.comparisonTitle')}</Card.Header>
             <Card.Body>
                 <div className="chart-container">
                     <Line data={chartData} options={options} />

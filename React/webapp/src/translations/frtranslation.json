@@ -1,0 +1,16 @@
+{
+    "accordion": {
+      "period": "Période",
+      "season": "Saison",
+      "eteHiver": "Été/hiver",
+      "passCategory": "Catégorie de forfait",
+      "seasonRef": "Saison de référence",
+      "selectAll": "Tout sélectionner",
+      "deselectAll": "Tout désélectionner"
+    },
+    "card": {
+      "entriesTitle": "Premières entrées",
+      "comparisonTitle": "Comparaison avec la saison de référence",
+      "compareWith": "Comparer avec "
+    }
+  }

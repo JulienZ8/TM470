@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import api from '../api';
 import { Form } from 'react-bootstrap';
 import Accordion from 'react-bootstrap/Accordion';
+import { useTranslation } from 'react-i18next';  // Import the useTranslation hook
 
 function PassSelector({ onPassChange }) {
+    const { t } = useTranslation(); // Initialize the translation function
     const [passCategories, setPassCategories] = useState([]);
     const [selectedPasses, setSelectedPasses] = useState([]);
 
@@ -43,11 +45,11 @@ function PassSelector({ onPassChange }) {
     return (
         <Accordion className="shadow-sm">
             <Accordion.Item eventKey="0">
-                <Accordion.Header>Catégorie de forfait</Accordion.Header>
+                <Accordion.Header>{t('accordion.passCategory')}</Accordion.Header> {/* Use translation */}
                 <Accordion.Body>
                     <Form.Check
                         type="checkbox"
-                        label={selectedPasses.length === passCategories.length ? "Deselect All" : "Select All"}
+                        label={selectedPasses.length === passCategories.length ? t('accordion.deselectAll') : t('accordion.selectAll')}
                         checked={selectedPasses.length === passCategories.length}
                         onChange={handleSelectAll}
                     />

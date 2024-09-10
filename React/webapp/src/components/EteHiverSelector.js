@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import api from '../api';
 import Accordion from 'react-bootstrap/Accordion';
 import Form from 'react-bootstrap/Form';
+import { useTranslation } from 'react-i18next';  // Import the useTranslation hook
 
 function EteHiverSelector({ onSeasonChange }) {
+    const { t } = useTranslation(); // Initialize the translation function
     const [seasons, setSeasons] = useState([]); //State to hold the list of seasons fetched from the API
     const [localSelectedSeasons, setLocalSelectedSeasons] = useState([]); //State to hold the currently selected seasons
 
@@ -44,12 +46,12 @@ function EteHiverSelector({ onSeasonChange }) {
     return (
         <Accordion className="shadow-sm"> {/* Accordion with a shadow */}
             <Accordion.Item eventKey="0"> {/* Single Accordion item */}
-                <Accordion.Header>Été/hiver</Accordion.Header>
+                <Accordion.Header>{t('accordion.eteHiver')}</Accordion.Header>
                 <Accordion.Body>
                     {/* Select All / Deselect all checkbox */}
                     <Form.Check 
                         type="checkbox"
-                        label={localSelectedSeasons.length === seasons.length ? "Deselect All" : "Select All"}
+                        label={localSelectedSeasons.length === seasons.length ? t('accordion.deselectAll') : t('accordion.selectAll')}
                         checked={localSelectedSeasons.length === seasons.length}
                         onChange={handleSelectAll}
                     />
