@@ -52,3 +52,25 @@ def get_seasons(db: Session):
 def get_pass_list(db: Session):
     pass_categories = db.query(models.DimPassCategory.main).distinct().all()
     return [category.main for category in pass_categories]
+
+# Retrieve pass_name, main, and id from the DimPassCategory table
+def get_pass_name_main(db: Session):
+    result = db.query(models.DimPassCategory.id, models.DimPassCategory.pass_name, models.DimPassCategory.main).all()
+    return result if result else []
+
+
+
+def update_pass_category(db: Session, pass_id: int, main: str):
+    # Fetch the pass category to update
+    db_pass = db.query(models.DimPassCategory).filter(models.DimPassCategory.id == pass_id).first()
+    # If not found, return None
+    if not db_pass:
+        return None
+    # Update the main field with the new value
+    db_pass.main = main
+    # Commit the changes to the database
+    db.commit()
+    # Refresh the instance to get the updated data
+    db.refresh(db_pass)
+    # Return the updated pass category as a dictionary (use a Pydantic model later)
+    return db_pass

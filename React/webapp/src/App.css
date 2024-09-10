@@ -10,3 +10,28 @@
   min-width: 250px; /* Ensure the width doesn't shrink below this value */
   max-width: 250px; /* Ensure the width doesn't expand beyond this value */
 }
+
+/* Styling for the select dropdown */
+.pass-select-container select {
+  width: 100%;
+  font-family: 'Courier New', Courier, monospace;  /* Monospaced font for even columns */
+  padding: 8px;
+  font-size: 14px;
+  white-space: pre;  /* Preserve spaces for formatting */
+}
+
+/* Styling the select options */
+.pass-select-container option {
+  display: flex;
+  padding: 8px;
+  font-size: 14px;
+  white-space: pre;  /* Preserve spaces */
+  justify-content: space-between;
+}
+
+/* Optional: Add some spacing or grid gap */
+.pass-select-container {
+  display: flex;
+  flex-direction: column;
+  grid-gap: 10px;  /* Add spacing between items */
+}

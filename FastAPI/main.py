@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -46,3 +46,27 @@ def get_seasons(db: Session = Depends(get_db)):
 @app.get("/passlist/", response_model=List[str])
 def get_pass_list(db: Session = Depends(get_db)):
     return crud.get_pass_list(db)  
+
+
+@app.get("/pass-name-main", response_model=List[schemas.PassDetails])
+def get_pass_name_main(db: Session = Depends(get_db)):
+    """
+    This endpoint returns a list of pass_name / main pairs.
+    """
+    return crud.get_pass_name_main(db)
+
+@app.put("/update-pass-category/{pass_id}", response_model=schemas.PassDetails)
+def update_pass_category(pass_id: int, pass_data: schemas.PassUpdate, db: Session = Depends(get_db)):
+    # Update the pass category in the database
+    updated_pass = crud.update_pass_category(db, pass_id, pass_data.main)
+
+    # If no pass is found with the given ID, raise a 404 error
+    if not updated_pass:
+        raise HTTPException(status_code=404, detail="Pass category not found")
+
+    # Return the updated pass as a Pydantic model (converted from the SQLAlchemy model)
+    return schemas.PassDetails(
+        id=updated_pass.id,
+        pass_name=updated_pass.pass_name,
+        main=updated_pass.main
+    )

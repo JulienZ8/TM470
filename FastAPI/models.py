@@ -28,5 +28,6 @@ class DimPassCategory(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     main = Column(Text, index=True)
+    pass_name = Column(Text, index=True)
 
     fact_entries = relationship("FactEntry", back_populates="pass_categories")
