@@ -3,14 +3,15 @@ import api from '../api';
 
 import { Form } from 'react-bootstrap';
 import Accordion from 'react-bootstrap/Accordion';
+import { useTranslation } from 'react-i18next';  //Import the useTranslation hook
 
 function PeriodSelector({ onPeriodChange }) {
+    const { t } = useTranslation(); //Initialize the translation function
     const [periods, setPeriods] = useState([]);
     const [localSelectedPeriods, setLocalSelectedPeriods] = useState([]);
 
     useEffect(() => {
-        // Fetch periods from the API only once
-        api.get('/periodlist/')
+        api.get('/periodlist/') //Fetch periods from the API only once
             .then(response => {
                 const fetchedPeriods = response.data;
                 setPeriods(fetchedPeriods);
@@ -20,7 +21,7 @@ function PeriodSelector({ onPeriodChange }) {
             .catch(error => {
                 console.error('Error fetching periods', error);
             });
-    }, []); // Empty dependency array ensures this effect runs only once
+    }, []); //Empty dependency array ensures this effect runs only once
 
     const handlePeriodChange = (period) => {
         const newSelectedPeriods = localSelectedPeriods.includes(period)
@@ -44,11 +45,11 @@ function PeriodSelector({ onPeriodChange }) {
 
         <Accordion className="shadow-sm">
             <Accordion.Item eventKey="0">
-                <Accordion.Header>Période</Accordion.Header>
+                <Accordion.Header>{t('accordion.period')}</Accordion.Header>
                     <Accordion.Body>
                         <Form.Check
                             type="checkbox"
-                            label={localSelectedPeriods.length === periods.length ? "Deselect All" : "Select All"}
+                            label={localSelectedPeriods.length === periods.length ? t('accordion.deselectAll') : t('accordion.selectAll')}
                             checked={localSelectedPeriods.length === periods.length}
                             onChange={handleSelectAll}
                         />

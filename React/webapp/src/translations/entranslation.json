@@ -1,0 +1,23 @@
+{
+    "accordion": {
+      "period": "Period",
+      "season": "Season",
+      "eteHiver": "Summer/winter",
+      "passCategory": "Pass category",
+      "seasonRef": "Season of reference",
+      "selectAll": "Select all",
+      "deselectAll": "Deselect all"
+    },
+    "card": {
+      "entriesTitle": "First entries",
+      "comparisonTitle": "Comparison with season of reference",
+      "compareWith": "Compare with ",
+      "updatePassCategory": "Update category of selected pass",
+      "passSelect": "Select a pass type",
+      "updateCategory": "Update its category",
+      "update": "Update",
+      "updateForm": "Pass classification update",
+      "select": "Select",
+      "noSelection": "No pass selected"
+    }
+  }

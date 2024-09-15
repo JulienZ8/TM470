@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import api from '../api';
 import Accordion from 'react-bootstrap/Accordion';
 import Form from 'react-bootstrap/Form';
+import { useTranslation } from 'react-i18next';  // Import the useTranslation hook
 
 function SeasonNameSelector({ onSeasonChange }) {
+    const { t } = useTranslation(); // Initialize the translation function
     const [seasonNames, setSeasonNames] = useState([]);
     const [localSelectedSeasonNames, setLocalSelectedSeasonNames] = useState([]);
 
@@ -41,11 +43,11 @@ function SeasonNameSelector({ onSeasonChange }) {
     return (
         <Accordion className="shadow-sm">
             <Accordion.Item eventKey="0">
-                <Accordion.Header>Saison</Accordion.Header>
+                <Accordion.Header>{t('accordion.season')}</Accordion.Header>
                 <Accordion.Body>
                     <Form.Check
                         type="checkbox"
-                        label={localSelectedSeasonNames.length === seasonNames.length ? "Deselect All" : "Select All"}
+                        label={localSelectedSeasonNames.length === seasonNames.length ? t('accordion.deselectAll') : t('accordion.selectAll')}
                         checked={localSelectedSeasonNames.length === seasonNames.length}
                         onChange={handleSelectAll}
                     />
@@ -66,4 +68,3 @@ function SeasonNameSelector({ onSeasonChange }) {
 }
 
 export default SeasonNameSelector;
-

@@ -1,10 +1,7 @@
 from sqlalchemy import Column, Date, Text, ForeignKey, Integer
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 from .database import Base
-
-
 
 class DimCalendar(Base):
     __tablename__ = 'dim_calendar'
@@ -31,5 +28,6 @@ class DimPassCategory(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     main = Column(Text, index=True)
+    pass_name = Column(Text, index=True)
 
     fact_entries = relationship("FactEntry", back_populates="pass_categories")

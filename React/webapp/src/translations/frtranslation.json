@@ -1,0 +1,23 @@
+{
+    "accordion": {
+      "period": "Période",
+      "season": "Saison",
+      "eteHiver": "Été/hiver",
+      "passCategory": "Catégorie de forfait",
+      "seasonRef": "Saison de référence",
+      "selectAll": "Tout sélectionner",
+      "deselectAll": "Tout désélectionner"
+    },
+    "card": {
+      "entriesTitle": "Premières entrées",
+      "comparisonTitle": "Comparaison avec la saison de référence",
+      "compareWith": "Comparer avec ",
+      "updatePassCategory": "Modifier la catégorie du pass sélectionné",
+      "passSelect": "Selectionner un type de pass",
+      "updateCategory": "Mettre à jour sa catégorie",
+      "update": "Mettre à jour",
+      "updateForm": "Modification de catégorie de pass",
+      "select": "Selectionner",
+      "noSelection": "Aucun pass selectionné"
+    }
+  }
