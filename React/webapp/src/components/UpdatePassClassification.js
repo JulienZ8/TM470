@@ -4,31 +4,31 @@ import { Card, Container, Row, Col, Form, Button } from 'react-bootstrap';  // I
 import { useTranslation } from 'react-i18next';  // Import the useTranslation hook
 
 function UpdatePassClassification() {
-    const { t } = useTranslation(); // Initialize the translation function
+    const { t } = useTranslation(); //Initialize the translation function
     const [passList, setPassList] = useState([]);  // Holds the list of pass_name/main pairs
     const [selectedPass, setSelectedPass] = useState(null);  // Holds the selected pass_name/main pair
     const [mainValue, setMainValue] = useState('');  // Holds the main value to be updated
 
-    // Fetch the list of pass_name/main pairs on component mount
+    //Fetch the list of pass_name/main pairs on component mount
     useEffect(() => {
         api.get('/pass-name-main')
             .then(response => {
-                setPassList(response.data);  // Store the pass list
+                setPassList(response.data);  //Store the pass list
             })
             .catch(error => {
                 console.error("Error fetching pass list", error);
             });
     }, []);
 
-    // Handle when a pass is selected from the dropdown
+    //Handle when a pass is selected from the dropdown
     const handlePassChange = (event) => {
         const selectedPassName = event.target.value;
         const pass = passList.find(p => p.pass_name === selectedPassName);
-        setSelectedPass(pass);  // Store the selected pass
-        setMainValue(pass ? pass.main : '');  // Set the main value in the text field, or empty if nothing is selected
+        setSelectedPass(pass);  //Store the selected pass
+        setMainValue(pass ? pass.main : '');  //Set the main value in the text field, or empty if nothing is selected
     };
 
-    // Handle form submission to update the main value
+    //Handle form submission to update the main value
     const handleSubmit = (event) => {
         event.preventDefault();
 

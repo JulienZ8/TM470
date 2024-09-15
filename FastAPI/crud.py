@@ -58,8 +58,6 @@ def get_pass_name_main(db: Session):
     result = db.query(models.DimPassCategory.id, models.DimPassCategory.pass_name, models.DimPassCategory.main).all()
     return result if result else []
 
-
-
 def update_pass_category(db: Session, pass_id: int, main: str):
     # Fetch the pass category to update
     db_pass = db.query(models.DimPassCategory).filter(models.DimPassCategory.id == pass_id).first()

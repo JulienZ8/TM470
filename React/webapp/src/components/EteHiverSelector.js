@@ -16,7 +16,7 @@ function EteHiverSelector({ onSeasonChange }) {
                 const fetchedSeasons = response.data;
                 setSeasons(fetchedSeasons); //Store fetched seasons in state
                 setLocalSelectedSeasons(fetchedSeasons); //Select all seasons by default
-                onSeasonChange(fetchedSeasons); // Notify parent component with initial selection
+                onSeasonChange(fetchedSeasons); //Notify parent component with initial selection
             })
             .catch(error => {
                 console.error('Error fetching seasons', error); //Handle any errors
